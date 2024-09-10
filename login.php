@@ -1,7 +1,21 @@
 <?php 
 require "functions.php";
 
+if ( isset($_POST["submit"]) ) {
+  $email = strtolower(htmlspecialchars(stripslashes($_POST["email"])));
+  $password = mysqli_real_escape_string($conn, $_POST["password"]);
 
+  $result = mysqli_query($conn, "SELECT * FROM account WHERE email = '$email'");
+  if ( mysqli_num_rows($result) > 0) {
+    
+    $row = mysqli_fetch_assoc($result);
+    if (password_verify($password, $row["password"])) {
+      header("Location: main.php");
+      exit;
+    }
+  }
+}
+  // $error = true;
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +39,9 @@ require "functions.php";
       </div>
       <div class="login-box">
         <h2>Login</h2>
+        <?php if (isset($error)) : ?>
+        <p style="color: red;">Email atau password salah!</p>
+        <?php endif; ?>
         <form action="" method="post" autocomplete="off">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required>
@@ -34,6 +51,9 @@ require "functions.php";
 
           <button type="submit" name="submit">Login</button>
         </form>
+        <div class="regis">
+          <a href="register.php">Don't Have Account?</a>
+        </div>
       </div>
     </div>
 </body>

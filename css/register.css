@@ -80,10 +80,10 @@ body {
 .login-box form button:hover {
   background-color: rgb(117, 189, 10);
 }
-.regis {
+.login {
   text-align: center;
   margin-top: 20px;
 }
-.regis a {
+.login a {
   color: #fff;
 }
