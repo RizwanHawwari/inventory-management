@@ -5,9 +5,9 @@ require "functions.php";
 if ( isset($_COOKIE["key"]) ) {
   $key = $_COOKIE["key"];
 
-  $r1 = mysqli_query($conn, "SELECT email FROM account WHERE email = 'email'");
+  $r1 = mysqli_query($conn, "SELECT email FROM account WHERE email = '$key'");
   $row1 = mysqli_fetch_assoc($r1);
-  if ( $row1["email"] === '$key' ) {
+  if ( $key === hash('sha256', $row1["email"]) ) {
     $_SESSION["login"] = true;
   }
 }

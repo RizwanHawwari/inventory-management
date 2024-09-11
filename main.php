@@ -20,6 +20,7 @@ if ( !isset( $_SESSION["login"] ) ) {
 
 <body>
   <h1>WELCOME XD</h1>
+  <a href="logout.php">Logout</a>
 </body>
 
 </html>
