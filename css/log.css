@@ -64,6 +64,18 @@ body {
   background-color: rgba(255, 255, 255, 0.5);
   margin-bottom: 35px;
 }
+.login-box form .remember input {
+  width: 20px;
+  height: 20px;
+}
+.login-box form .remember {
+  display: flex;
+  justify-content: space-between;
+  /* background-color: red; */
+  height: 20px;
+  width: 150px;
+  margin-bottom: 20px;
+}
 .login-box form button {
   font-size: 1.1rem;
   letter-spacing: 0.7px;
