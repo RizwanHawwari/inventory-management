@@ -135,6 +135,14 @@ td {
   text-align: left;
 }
 
+table tr:nth-child(odd) td {
+  background-color: white; /* Warna untuk baris ganjil */
+}
+
+table tr:nth-child(even) td {
+  background-color: #d9d9d9; /* Warna untuk baris genap */
+}
+
 th {
   background-color: #f2f2f2;
 }
