@@ -13,6 +13,9 @@ if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
+// Variabel untuk menyimpan pesan
+$message = '';
+
 // Proses form ketika disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
@@ -23,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO produk (nama_produk, merk, produk_masuk) VALUES ('$nama_produk', '$merk', '$jumlah')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Stok berhasil ditambahkan!";
+        $message = "Stok berhasil ditambahkan!";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $message = "Error: " . $sql . "<br>" . $conn->error;
     }
 }
 
@@ -65,10 +68,44 @@ $conn->close();
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* Untuk penempatan tombol close */
   }
 
   h2 {
     text-align: center;
+    display: flex;
+    align-items: center;
+    /* Align icon and text vertically */
+    justify-content: center;
+    /* Center the content */
+    margin-bottom: 10px;
+    /* Space below the header */
+  }
+
+  .plus-icon {
+    font-size: 24px;
+    /* Size of the plus icon */
+    margin-right: 10px;
+    /* Space between icon and text */
+  }
+
+  .divider {
+    width: 100%;
+    /* Full width */
+    height: 1px;
+    /* Height of the line */
+    background-color: #ccc;
+    /* Color of the line */
+    margin: 10px 0;
+    /* Space above and below the line */
+  }
+
+  label {
+    margin: 10px 0 5px;
+    /* Space around the label */
+    display: block;
+    /* Block display for labels */
   }
 
   input[type="text"],
@@ -94,17 +131,62 @@ $conn->close();
   input[type="submit"]:hover {
     background-color: #45a049;
   }
+
+  .message {
+    text-align: center;
+    /* Center the message */
+    margin: 10px 0;
+    color: green;
+    /* Color for success message */
+  }
+
+  .close-button {
+    position: absolute;
+    /* Position button in the top right */
+    top: 10px;
+    right: 15px;
+    background: none;
+    /* No background */
+    border: none;
+    /* No border */
+    font-size: 24px;
+    /* Font size */
+    cursor: pointer;
+    /* Pointer cursor */
+    color: #777;
+    /* Color for button */
+  }
+
+  .close-button:hover {
+    color: red;
+    /* Change color on hover */
+  }
   </style>
 </head>
 
 <body>
 
   <div class="container">
-    <h2>Tambahkan Stok</h2>
+    <button class="close-button" onclick="window.location.href='index.php'">&times;</button>
+    <h2>
+      <span class="plus-icon">+</span> Tambahkan Stok
+    </h2>
+    <div class="divider"></div>
+
+    <?php if ($message): ?>
+    <div class="message"><?php echo $message; ?></div>
+    <?php endif; ?>
+
     <form method="POST" action="">
-      <input type="text" name="nama_produk" placeholder="Tambahkan nama produk" required>
-      <input type="text" name="merk" placeholder="Tambahkan merk" required>
-      <input type="number" name="jumlah" placeholder="Tambahkan jumlah" required>
+      <label for="nama_produk">Nama Produk</label>
+      <input type="text" name="nama_produk" id="nama_produk" placeholder="Tambahkan nama produk" required>
+
+      <label for="merk">Merek</label>
+      <input type="text" name="merk" id="merk" placeholder="Tambahkan merk" required>
+
+      <label for="jumlah">Jumlah</label>
+      <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>
+
       <input type="submit" value="Simpan">
     </form>
   </div>
