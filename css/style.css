@@ -26,10 +26,17 @@ body {
   color: #000;
   text-decoration: none;
   font-size: 24px; /* Ukuran ikon lebih besar */
+  transition: color 0.3s; /* Transisi warna */
 }
 
+/* Hover effect */
 .sidebar a:hover {
-  color: #007bff; /* Warna ikon berubah saat hover */
+  color: #fff; /* Ubah warna menjadi putih saat hover */
+}
+
+/* Active effect */
+.sidebar a.active {
+  color: #fff; /* Ubah warna menjadi putih saat aktif */
 }
 
 /* Tambahkan CSS untuk content-wrapper */
@@ -55,6 +62,45 @@ body {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between; /* Untuk menyebar antara header dan tombol tambah stock */
+  align-items: center; /* Vertikal center */
+}
+
+.add-stock {
+  margin-left: 10px; /* Jarak antara tombol tambah stock dan header */
+}
+
+.add-stock-button {
+  background-color: #a6abd8; /* Background color */
+  color: white; /* Warna teks putih */
+  padding: 10px 15px; /* Padding */
+  border: none; /* Hilangkan border */
+  border-radius: 5px; /* Sudut membulat */
+  text-decoration: none; /* Hilangkan garis bawah */
+}
+
+.add-stock-button:hover {
+  background-color: #8c99b4; /* Warna saat hover */
+}
+
+.search-container {
+  display: flex; /* Gunakan flexbox */
+  justify-content: flex-end; /* Pindahkan ke sisi kanan */
+  margin-top: 20px; /* Jarak atas */
+}
+
+.search-container form {
+  display: flex; /* Gunakan flexbox untuk form */
+}
+
+.search-container input[type="text"] {
+  padding: 8px; /* Padding untuk input */
+  border-radius: 5px; /* Sudut membulat */
+  border: 1px solid #ccc; /* Border */
 }
 
 /* Table Styles */
@@ -103,6 +149,21 @@ th {
 
   .sidebar a {
     font-size: 20px; /* Ukuran ikon lebih kecil */
+  }
+
+  .search-container {
+    width: 100%; /* Agar container pencarian mengambil seluruh lebar */
+    margin-top: 10px; /* Jarak atas */
+  }
+
+  .search-container form {
+    width: 100%; /* Agar form pencarian mengambil seluruh lebar */
+  }
+
+  .search-container input[type="text"] {
+    width: 100%; /* Input akan memanjang penuh */
+    max-width: 300px; /* Maksimum lebar */
+    margin-left: 10px; /* Jarak kiri antara input dan form */
   }
 }
 

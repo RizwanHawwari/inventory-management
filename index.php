@@ -32,7 +32,6 @@ $result = mysqli_query($conn, $sql);
 if (!$result) {
     die("Query failed: " . mysqli_error($conn)); // Tampilkan pesan kesalahan jika query gagal
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -60,11 +59,15 @@ if (!$result) {
   <div class="content-wrapper">
     <div class="dashboard-header">
       <h2>DASHBOARD</h2>
-      <div class="search-container">
-        <form action="" method="GET" autocomplete="off">
-          <input type="text" name="search" placeholder="Cari" value="<?= htmlspecialchars($search); ?>">
-        </form>
+      <div class="add-stock">
+        <a href="#" class="add-stock-button"><i class="fas fa-plus"></i> Tambah Stock</a>
       </div>
+    </div>
+
+    <div class="search-container">
+      <form action="" method="GET" autocomplete="off">
+        <input type="text" name="search" placeholder="Cari" value="<?= htmlspecialchars($search); ?>">
+      </form>
     </div>
 
     <table>
@@ -98,7 +101,6 @@ if (!$result) {
     </table>
   </div>
 
-  <script src="script.js"></script>
 </body>
 
 </html>
