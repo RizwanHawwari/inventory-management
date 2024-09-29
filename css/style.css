@@ -1,4 +1,8 @@
 /* Layout umum */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #8187b8;
@@ -45,17 +49,24 @@ body {
   max-width: 1100px; /* Batas lebar maksimum */
   margin: 20px auto; /* Margin atas dan bawah 20px, dan center secara horizontal */
   background-color: white; /* Latar belakang putih untuk wrapper */
-  padding: 20px; /* Padding di dalam wrapper */
+  padding: 20px;
   border-radius: 8px; /* Sudut membulat */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Efek bayangan */
+  overflow: auto; /* Menambahkan overflow untuk menggulir */
 }
 
 .dashboard-header {
-  background-color: #d1d1d1;
+  background-color: #bab7b7; /* Ubah warna latar belakang */
   padding: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%; /* 100% lebar mengikuti content-wrapper */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Tambahkan bayangan untuk efek visual */
+}
+
+.dashboard-header h2 {
+  color: #fff; /* Ubah warna tulisan "Dashboard" menjadi putih */
 }
 
 .dashboard-header input[type="text"] {
@@ -105,7 +116,8 @@ body {
 
 /* Table Styles */
 table {
-  width: 100%; /* Still full width inside wrapper */
+  width: 100%; /* Tetap penuh lebar */
+  max-width: 100%; /* Pastikan tidak melebihi lebar wrapper */
   border-collapse: collapse;
   margin-top: 20px;
   background-color: white;
@@ -151,6 +163,10 @@ th {
     font-size: 20px; /* Ukuran ikon lebih kecil */
   }
 
+  table {
+    font-size: 14px; /* Kecilkan ukuran font untuk tablet */
+  }
+
   .search-container {
     width: 100%; /* Agar container pencarian mengambil seluruh lebar */
     margin-top: 10px; /* Jarak atas */
@@ -175,10 +191,14 @@ th {
   }
 
   .dashboard-header input[type="text"] {
-    width: 70%; /* Lebar maksimal 70% pada smartphone */
+    width: 100%; /* Lebar maksimal 70% pada smartphone */
     max-width: 200px;
     min-width: 120px;
     margin-top: 10px;
+  }
+
+  table {
+    font-size: 12px; /* Kecilkan ukuran font untuk smartphone */
   }
 
   .sidebar {
