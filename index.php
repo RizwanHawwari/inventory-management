@@ -54,7 +54,6 @@ if (!$result) {
     <a href="#"><i class="fas fa-shopping-cart"></i></a>
     <a href="#"><i class="fas fa-tags"></i></a> <!-- Icon Discount -->
     <a href="logout.php"><i class="fas fa-sign-out-alt"></i></a> <!-- Icon Log Out -->
-    <a href="#"><i class="fas fa-cog"></i></a>
   </div>
 
   <!-- Wrapper untuk dashboard header dan tabel -->

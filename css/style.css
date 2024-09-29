@@ -7,18 +7,29 @@ body {
 }
 
 /* Sidebar styles */
+/* Sidebar styles */
 .sidebar {
-  position: fixed; /* Agar sidebar tetap berada di kiri layar saat scroll */
-  left: 0; /* Tetap di bagian kiri */
-  top: 50%; /* Menempatkan sidebar di tengah vertikal */
-  transform: translateY(
-    -50%
-  ); /* Mengoreksi posisi agar betul-betul di tengah */
-  width: 50px; /* Lebar sidebar */
-  background-color: #b4baeb; /* Background ungu terang */
-  padding: 10px 0; /* Padding vertikal */
-  text-align: center; /* Menyusun konten ke tengah */
-  height: fit-content; /* Sidebar hanya menyesuaikan konten */
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px; /* Lebar sidebar */
+  background-color: #e1bee7;
+  padding: 15px 0; /* Padding vertikal lebih besar */
+  text-align: center;
+  height: fit-content;
+}
+
+.sidebar a {
+  display: block;
+  margin: 15px 0; /* Margin antar ikon */
+  color: #000;
+  text-decoration: none;
+  font-size: 24px; /* Ukuran ikon lebih besar */
+}
+
+.sidebar a:hover {
+  color: #007bff; /* Warna ikon berubah saat hover */
 }
 
 /* Tambahkan CSS untuk content-wrapper */
@@ -85,6 +96,14 @@ th {
     min-width: 150px;
     margin-top: 10px;
   }
+
+  .sidebar {
+    width: 50px; /* Lebar sidebar lebih kecil pada tablet */
+  }
+
+  .sidebar a {
+    font-size: 20px; /* Ukuran ikon lebih kecil */
+  }
 }
 
 /* Untuk layar dengan lebar maksimal 480px (Smartphone) */
@@ -99,5 +118,9 @@ th {
     max-width: 200px;
     min-width: 120px;
     margin-top: 10px;
+  }
+
+  .sidebar {
+    display: none; /* Sembunyikan sidebar pada smartphone */
   }
 }
