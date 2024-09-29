@@ -28,9 +28,9 @@ $result = mysqli_query($conn, $sql);
 <body>
 
   <div class="sidebar">
-    <a href="#"><img src="home_icon.png" alt="Home" width="20"></a>
-    <a href="#"><img src="cart_icon.png" alt="Cart" width="20"></a>
-    <a href="#"><img src="settings_icon.png" alt="Settings" width="20"></a>
+    <a href="#"><i class="fas fa-home"></i></a>
+    <a href="#"><i class="fas fa-shopping-cart"></i></a>
+    <a href="#"><i class="fas fa-cog"></i></a>
   </div>
 
   <div class="container">

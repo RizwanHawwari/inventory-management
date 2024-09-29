@@ -18,6 +18,19 @@ body {
 .sidebar a {
   display: block;
   margin: 20px 0;
+  color: #000;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.sidebar a:hover {
+  color: #007bff;
+}
+
+.sidebar i {
+  display: block;
+  margin: 0 auto;
+  font-size: 24px;
 }
 
 .container {
