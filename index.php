@@ -7,30 +7,24 @@ if (!isset($_SESSION["login"])) {
     exit;
 }
 
-// Include koneksi database
 include 'db.php';
 
-// Menangkap input pencarian jika ada
 $search = "";
 if (isset($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
 }
 
-// Query untuk mengambil data produk dengan fitur pencarian
 $sql = "SELECT id, nama_produk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
         FROM produk";
 
-// Jika ada input pencarian, tambahkan kondisi pencarian ke query
 if (!empty($search)) {
     $sql .= " WHERE nama_produk LIKE '%$search%'";
 }
 
-// Menjalankan query dan menyimpan hasilnya
 $result = mysqli_query($conn, $sql);
 
-// Periksa jika query berhasil
 if (!$result) {
-    die("Query failed: " . mysqli_error($conn)); // Tampilkan pesan kesalahan jika query gagal
+    die("Query failed: " . mysqli_error($conn));
 }
 ?>
 
@@ -51,11 +45,10 @@ if (!$result) {
   <div class="sidebar">
     <a href="#"><i class="fas fa-home"></i></a>
     <a href="#"><i class="fas fa-shopping-cart"></i></a>
-    <a href="#"><i class="fas fa-tags"></i></a> <!-- Icon Discount -->
-    <a href="logout.php"><i class="fas fa-sign-out-alt"></i></a> <!-- Icon Log Out -->
+    <a href="#"><i class="fas fa-tags"></i></a>
+    <a href="logout.php"><i class="fas fa-sign-out-alt"></i></a>
   </div>
 
-  <!-- Wrapper untuk dashboard header dan tabel -->
   <div class="content-wrapper">
     <div class="dashboard-header">
       <h2>DASHBOARD</h2>
@@ -83,7 +76,6 @@ if (!$result) {
       <tbody>
         <?php
             if (mysqli_num_rows($result) > 0) {
-                // Menampilkan data produk
                 while($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
                     echo "<td>" . $row["id"] . "</td>";
@@ -106,6 +98,5 @@ if (!$result) {
 </html>
 
 <?php
-// Menutup koneksi
 mysqli_close($conn);
 ?>
