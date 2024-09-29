@@ -60,7 +60,7 @@ if (!$result) {
     <div class="dashboard-header">
       <h2>DASHBOARD</h2>
       <div class="add-stock">
-        <a href="#" class="add-stock-button"><i class="fas fa-plus"></i> Tambah Stock</a>
+        <a href="addstock.php" class="add-stock-button"><i class="fas fa-plus"></i> Tambah Stock</a>
       </div>
     </div>
 
