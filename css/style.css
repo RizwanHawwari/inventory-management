@@ -1,7 +1,7 @@
 /* Layout umum */
 body {
   font-family: Arial, sans-serif;
-  background-color: #a6b1e1;
+  background-color: #8187b8;
   margin: 0;
   padding: 0;
 }
@@ -15,31 +15,21 @@ body {
     -50%
   ); /* Mengoreksi posisi agar betul-betul di tengah */
   width: 50px; /* Lebar sidebar */
-  background-color: #e1bee7; /* Background ungu terang */
+  background-color: #b4baeb; /* Background ungu terang */
   padding: 10px 0; /* Padding vertikal */
   text-align: center; /* Menyusun konten ke tengah */
   height: fit-content; /* Sidebar hanya menyesuaikan konten */
 }
 
-.sidebar a {
-  display: block;
-  margin: 20px 0;
-  color: #000;
-  text-decoration: none;
-  font-size: 20px;
-}
-
-.sidebar a:hover {
-  color: #007bff; /* Warna ikon berubah saat hover */
-}
-
-.sidebar i {
-  font-size: 24px;
-}
-
-.container {
-  margin-left: 60px;
-  padding: 20px;
+/* Tambahkan CSS untuk content-wrapper */
+.content-wrapper {
+  width: 70%; /* Atur lebar 50% */
+  max-width: 1100px; /* Batas lebar maksimum */
+  margin: 20px auto; /* Margin atas dan bawah 20px, dan center secara horizontal */
+  background-color: white; /* Latar belakang putih untuk wrapper */
+  padding: 20px; /* Padding di dalam wrapper */
+  border-radius: 8px; /* Sudut membulat */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Efek bayangan */
 }
 
 .dashboard-header {
@@ -56,22 +46,9 @@ body {
   border: 1px solid #ccc;
 }
 
-/* Batasan untuk search bar agar tidak terlalu lebar di layar kecil */
-.dashboard-header .search-bar {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.dashboard-header input[type="text"] {
-  width: 50%;
-  max-width: 300px;
-  min-width: 200px;
-}
-
 /* Table Styles */
 table {
-  width: 100%;
+  width: 100%; /* Still full width inside wrapper */
   border-collapse: collapse;
   margin-top: 20px;
   background-color: white;
