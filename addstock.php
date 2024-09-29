@@ -79,7 +79,7 @@ $conn->close();
     /* Align icon and text vertically */
     justify-content: center;
     /* Center the content */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     /* Space below the header */
   }
 
@@ -119,7 +119,8 @@ $conn->close();
   }
 
   input[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #a6abd8;
+    /* Changed button color */
     color: white;
     border: none;
     padding: 10px;
@@ -129,7 +130,8 @@ $conn->close();
   }
 
   input[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #8a8db0;
+    /* Slightly darker on hover */
   }
 
   .message {
@@ -177,7 +179,7 @@ $conn->close();
     <div class="message"><?php echo $message; ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="">
+    <form method="POST" action="" autocomplete="off">
       <label for="nama_produk">Nama Produk</label>
       <input type="text" name="nama_produk" id="nama_produk" placeholder="Tambahkan nama produk" required>
 
