@@ -13,7 +13,7 @@ if ( isset($_COOKIE["key"]) ) {
 }
 
 if ( isset($_SESSION["login"]) ) {
-  header("Location: main.php");
+  header("Location: index.php");
   exit;
 }
 
@@ -30,7 +30,7 @@ if ( isset($_POST["submit"]) ) {
       if ( isset($_POST["remember"]) ) {
         setcookie("key", hash('sha256', 'email'), time()+60*60*24);
       }
-      header("Location: main.php");
+      header("Location: index.php");
       exit;
     }
   }
