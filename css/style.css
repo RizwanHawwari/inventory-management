@@ -6,13 +6,19 @@ body {
   padding: 0;
 }
 
+/* Sidebar styles */
 .sidebar {
-  height: 100vh;
-  width: 50px;
-  background-color: #d1d1d1;
-  float: left;
-  padding: 20px 0;
-  text-align: center;
+  position: fixed; /* Agar sidebar tetap berada di kiri layar saat scroll */
+  left: 0; /* Tetap di bagian kiri */
+  top: 50%; /* Menempatkan sidebar di tengah vertikal */
+  transform: translateY(
+    -50%
+  ); /* Mengoreksi posisi agar betul-betul di tengah */
+  width: 50px; /* Lebar sidebar */
+  background-color: #e1bee7; /* Background ungu terang */
+  padding: 10px 0; /* Padding vertikal */
+  text-align: center; /* Menyusun konten ke tengah */
+  height: fit-content; /* Sidebar hanya menyesuaikan konten */
 }
 
 .sidebar a {
@@ -24,12 +30,10 @@ body {
 }
 
 .sidebar a:hover {
-  color: #007bff;
+  color: #007bff; /* Warna ikon berubah saat hover */
 }
 
 .sidebar i {
-  display: block;
-  margin: 0 auto;
   font-size: 24px;
 }
 
