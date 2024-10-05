@@ -28,7 +28,7 @@ if ( isset($_POST["submit"]) ) {
     if (password_verify($password, $row["password"])) {
       $_SESSION["login"] = true;
       if ( isset($_POST["remember"]) ) {
-        setcookie("key", hash('sha256', 'email'), time()+60*60*24);
+        setcookie("key", hash('sha256', $email), time()+60*60*24);
       }
       header("Location: index.php");
       exit;
@@ -44,18 +44,20 @@ if ( isset($_POST["submit"]) ) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/log.css">
+  <link rel="stylesheet" href="css/login.css">
   <title>Login Form</title>
 </head>
 
 <body>
-  <div class="logo-cn">
-    <img src="img/logo-cn.png" alt="logo-cn" width="150">
+  <div class="header-logos">
+    <div class="logo-cn">
+      <img src="img/logo-cn.png" alt="logo-cn">
+    </div>
+    <div class="logo-rpl">
+      <img src="img/logo-rpl.png" alt="logo-rpl">
+    </div>
   </div>
   <div class="container">
-    <div class="logo-rpl">
-      <img src="img/logo-rpl.png" alt="logo-rpl" width="150">
-    </div>
     <div class="login-box">
       <h2>Login</h2>
       <?php if (isset($error)) : ?>

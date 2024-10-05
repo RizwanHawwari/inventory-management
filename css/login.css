@@ -20,6 +20,10 @@ body {
   justify-content: center;
   align-items: center;
 }
+.logo-cn img,
+.logo-rpl img {
+  width: 150px;
+}
 .logo-cn {
   z-index: 2;
   position: absolute;
@@ -98,4 +102,34 @@ body {
 }
 .regis a {
   color: #fff;
+}
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+  .logo-cn img,
+  .logo-rpl img {
+    width: 90px; /* Smaller width for smaller screens */
+  }
+
+  .logo-cn {
+    top: 10px;
+    left: 10px;
+  }
+
+  .logo-rpl {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-cn img,
+  .logo-rpl img {
+    width: 70px; /* Even smaller for very small screens */
+  }
+
+  .logo-cn,
+  .logo-rpl {
+    top: 30px;
+    right: 30px;
+  }
 }
