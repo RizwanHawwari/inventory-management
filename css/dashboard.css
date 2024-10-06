@@ -171,8 +171,29 @@ th {
   border: none;
   border-radius: 5px;
   text-decoration: none;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .add-stock:hover {
   background-color: #8c99b4;
+}
+
+/* .add-stock {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+} */
+
+.plus-icon {
+  border-radius: 8px;
+  padding: 2px 8px;
+  margin-right: 5px;
+  font-size: 18px;
+  border: 1px solid #fff;
+}
+
+.dashboard-header a {
+  text-decoration: none;
 }

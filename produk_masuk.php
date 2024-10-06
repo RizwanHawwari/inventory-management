@@ -9,7 +9,7 @@ if (!isset($_SESSION["login"])) {
 
 include 'db.php';
 
-$sql = "SELECT id, nama_produk, merk, jumlah, tanggal FROM produk_masuk"; // Ganti nama tabel sesuai yang kamu gunakan
+$sql = "SELECT id, nama_produk, merk, jumlah, tanggal FROM produk_masuk";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -36,7 +36,12 @@ if (!$result) {
       <i class="fas fa-bars" id="hamburger-icon"></i>
     </div>
     <h2>PRODUK MASUK</h2>
-    <a href="addstock.php"><button class="add-stock">Tambahkan Stok</button></a>
+    <a href="addstock.php">
+      <button class="add-stock add-stock-button">
+        <span class="plus-icon">+</span>
+        Tambahkan Stok
+      </button>
+    </a>
   </div>
 
   <div class="sidebar" id="sidebar">
