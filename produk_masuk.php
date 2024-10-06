@@ -9,18 +9,7 @@ if (!isset($_SESSION["login"])) {
 
 include 'db.php';
 
-$search = "";
-if (isset($_GET['search'])) {
-    $search = mysqli_real_escape_string($conn, $_GET['search']);
-}
-
-$sql = "SELECT id, nama_produk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
-        FROM produk";
-
-if (!empty($search)) {
-    $sql .= " WHERE nama_produk LIKE '%$search%'";
-}
-
+$sql = "SELECT id, nama_produk, merk, jumlah, tanggal FROM produk_masuk"; // Ganti nama tabel sesuai yang kamu gunakan
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -34,7 +23,7 @@ if (!$result) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Stok Produk</title>
+  <title>Produk Masuk</title>
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -46,27 +35,23 @@ if (!$result) {
     <div class="hamburger">
       <i class="fas fa-bars" id="hamburger-icon"></i>
     </div>
-    <h2>DASHBOARD</h2>
-    <div class="search-container">
-      <form action="" method="GET" autocomplete="off">
-        <input type="text" name="search" placeholder="Cari" value="<?= htmlspecialchars($search); ?>">
-      </form>
-    </div>
+    <h2>PRODUK MASUK</h2>
+    <a href="addstock.php"><button class="add-stock">Tambahkan Stok</button></a>
   </div>
 
   <div class="sidebar" id="sidebar">
     <div class="close-btn" id="close-btn">
       <i class="fas fa-times"></i>
     </div>
-    <a href="index.php">
+    <a href="dashboard.php">
       <i class="fas fa-home"></i>
       <span>Dashboard</span>
     </a>
-    <a href="#">
+    <a href="produk_masuk.php">
       <i class="fas fa-shopping-cart"></i>
       <span>Produk Masuk</span>
     </a>
-    <a href="#">
+    <a href="produk_keluar.php">
       <i class="fas fa-tags"></i>
       <span>Produk Keluar</span>
     </a>
@@ -76,16 +61,15 @@ if (!$result) {
     </a>
   </div>
 
-
   <div class="content-wrapper">
     <table>
       <thead>
         <tr>
           <th>ID</th>
           <th>Nama Produk</th>
-          <th>Produk Masuk</th>
-          <th>Produk Keluar</th>
-          <th>Total</th>
+          <th>Merk</th>
+          <th>Jumlah</th>
+          <th>Tanggal</th>
         </tr>
       </thead>
       <tbody>
@@ -95,9 +79,9 @@ if (!$result) {
             echo "<tr>";
             echo "<td>" . $row["id"] . "</td>";
             echo "<td>" . $row["nama_produk"] . "</td>";
-            echo "<td>" . $row["produk_masuk"] . "</td>";
-            echo "<td>" . $row["produk_keluar"] . "</td>";
-            echo "<td>" . $row["total"] . "</td>";
+            echo "<td>" . $row["merk"] . "</td>";
+            echo "<td>" . $row["jumlah"] . "</td>";
+            echo "<td>" . $row["tanggal"] . "</td>";
             echo "</tr>";
           }
         } else {

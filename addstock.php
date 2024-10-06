@@ -1,10 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "inventory_db";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+include "db.php";
 
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
@@ -16,8 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
     $merk = $_POST['merk'];
     $jumlah = $_POST['jumlah'];
+    $tanggal = $_POST['tanggal']; // Menangkap input tanggal
 
-    $sql = "INSERT INTO produk (nama_produk, merk, produk_masuk) VALUES ('$nama_produk', '$merk', '$jumlah')";
+    // Perbarui query SQL untuk menyertakan field tanggal
+    $sql = "INSERT INTO produk_masuk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
 
     if ($conn->query($sql) === TRUE) {
         $message = "Stok berhasil ditambahkan!";
@@ -84,7 +81,9 @@ $conn->close();
   }
 
   input[type="text"],
-  input[type="number"] {
+  input[type="number"],
+  input[type="date"] {
+    /* Menambahkan input date */
     width: calc(100% - 20px);
     padding: 10px;
     margin: 10px 0;
@@ -93,7 +92,7 @@ $conn->close();
   }
 
   input[type="submit"] {
-    background-color: #a6abd8;
+    background-color: #15beed;
     color: white;
     border: none;
     padding: 10px;
@@ -151,6 +150,9 @@ $conn->close();
 
       <label for="jumlah">Jumlah</label>
       <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>
+
+      <label for="tanggal">Tanggal</label>
+      <input type="date" name="tanggal" id="tanggal" required> <!-- Input untuk tanggal -->
 
       <input type="submit" value="Simpan">
     </form>

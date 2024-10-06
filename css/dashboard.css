@@ -14,7 +14,7 @@ body {
   position: fixed;
   left: -250px; /* Hidden initially */
   top: 0;
-  width: 60px;
+  width: 250px;
   height: 100%;
   background-color: #15beed;
   transition: left 0.3s ease-in-out;
@@ -25,34 +25,48 @@ body {
 }
 
 .sidebar a {
-  display: block;
+  display: flex; /* Mengubah menjadi flex untuk menata icon dan text */
+  align-items: center; /* Menyusun item di tengah secara vertikal */
   margin: 15px 0;
-  color: #000;
+  color: #fff;
   text-decoration: none;
   font-size: 24px;
   transition: color 0.3s;
   padding: 15px;
 }
 
+.sidebar a span {
+  margin-left: 10px; /* Menambahkan jarak antara icon dan teks */
+  font-size: 18px; /* Ukuran font untuk teks */
+}
+
 .sidebar a:hover {
-  color: #fff;
+  color: #333;
 }
 
 .sidebar a.active {
-  color: #fff;
+  color: #333;
 }
 
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  border: none;
   cursor: pointer;
-  color: #000;
+  transition: background-color 0.3s;
 }
 
-.close-btn:hover {
+.close-btn i {
+  font-size: 28px;
   color: #fff;
+}
+
+.close-btn i:hover {
+  color: #333;
 }
 
 .content-wrapper {
@@ -136,4 +150,29 @@ th {
   .content-wrapper {
     height: calc(100vh - 150px);
   }
+  .sidebar {
+    width: 60px;
+  }
+  .sidebar a span {
+    display: none;
+  }
+}
+
+/* add stock */
+.add-stock {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.add-stock {
+  background-color: #a6abd8;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.add-stock:hover {
+  background-color: #8c99b4;
 }
