@@ -48,7 +48,7 @@ if (!$result) {
     <div class="close-btn" id="close-btn">
       <i class="fas fa-times"></i>
     </div>
-    <a href="dashboard.php">
+    <a href="index.php">
       <i class="fas fa-home"></i>
       <span>Dashboard</span>
     </a>
