@@ -35,7 +35,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES ('adada@yahoo.com','$2y$10$xTY7UfnQrz7r9Iqzy8iCmuekfZAGKsl4MSHblbDREyPEXDWlVxKUq');
+INSERT INTO `account` (email, password) VALUES ('admin@gmail.com', MD5('123'));
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for Win64 (AMD64)
+-- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
 --
 -- Host: localhost    Database: inventory_db
 -- ------------------------------------------------------
--- Server version	10.4.28-MariaDB
+-- Server version	10.4.32-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,12 +25,13 @@ DROP TABLE IF EXISTS `produk`;
 CREATE TABLE `produk` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama_produk` varchar(255) NOT NULL,
-  `produk_masuk` int(11) NOT NULL,
-  `produk_keluar` int(11) NOT NULL,
-  `merk` varchar(255) DEFAULT NULL,
-  `jumlah` int(11) DEFAULT NULL,
+  `merk` varchar(255) NOT NULL,
+  `produk_masuk` int(11) DEFAULT 0,
+  `produk_keluar` int(11) DEFAULT 0,
+  `jumlah` int(11) DEFAULT 0,
+  `tanggal` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +40,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
-INSERT INTO `produk` VALUES (1,'Teh Pucuk',56,32,NULL,NULL),(2,'Coca Cola',123,47,NULL,NULL),(3,'Sprite',78,12,NULL,NULL),(4,'Golda Coffee',56,0,'Golda',NULL),(5,'Teh Botol',12,0,'Sosro',NULL),(6,'Teh Kotak',49,0,'Indofood',NULL);
+INSERT INTO `produk` VALUES (2,'Teh Kotak','Indofood',698,133,698,'2024-10-06'),(6,'Lays','Good',783,24,783,'2024-10-06'),(16,'Indomie Soto','Indomie',800,0,800,'2024-10-06');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-29 19:43:32
+-- Dump completed on 2024-10-06 15:36:27
