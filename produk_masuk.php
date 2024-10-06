@@ -24,7 +24,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Masuk</title>
-  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/produk_masuk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -43,6 +43,11 @@ if (!$result) {
       </button>
     </a>
   </div>
+
+  <!-- Search Bar -->
+  <form method="GET" action="" class="search-bar" autocomplete="off">
+    <input type="text" name="search" placeholder="cari" class="search-input">
+  </form>
 
   <div class="sidebar" id="sidebar">
     <div class="close-btn" id="close-btn">
@@ -79,6 +84,10 @@ if (!$result) {
       </thead>
       <tbody>
         <?php
+        $search = isset($_GET['search']) ? $_GET['search'] : '';
+        $sql = "SELECT id, nama_produk, merk, jumlah, tanggal FROM produk_masuk WHERE nama_produk LIKE '%$search%'";
+        $result = mysqli_query($conn, $sql);
+
         if (mysqli_num_rows($result) > 0) {
           while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
