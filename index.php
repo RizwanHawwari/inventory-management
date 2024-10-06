@@ -62,11 +62,11 @@ if (!$result) {
       <i class="fas fa-home"></i>
       <span>Dashboard</span>
     </a>
-    <a href="#">
+    <a href="produk_masuk.php">
       <i class="fas fa-shopping-cart"></i>
       <span>Produk Masuk</span>
     </a>
-    <a href="#">
+    <a href="produk_keluar.php">
       <i class="fas fa-tags"></i>
       <span>Produk Keluar</span>
     </a>

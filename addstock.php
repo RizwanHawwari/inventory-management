@@ -13,13 +13,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jumlah = $_POST['jumlah'];
     $tanggal = $_POST['tanggal']; // Menangkap input tanggal
 
-    // Perbarui query SQL untuk menyertakan field tanggal
-    $sql = "INSERT INTO produk_masuk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
+    // Cek apakah produk sudah ada
+    $sqlCheck = "SELECT jumlah FROM produk_masuk WHERE nama_produk = '$nama_produk'";
+    $resultCheck = $conn->query($sqlCheck);
 
-    if ($conn->query($sql) === TRUE) {
-        $message = "Stok berhasil ditambahkan!";
+    if ($resultCheck->num_rows > 0) {
+        // Produk sudah ada, ambil jumlah saat ini
+        $row = $resultCheck->fetch_assoc();
+        $jumlahLama = $row['jumlah'];
+
+        // Hitung jumlah baru
+        $jumlahBaru = $jumlahLama + $jumlah;
+
+        // Update jumlah produk
+        $sqlUpdate = "UPDATE produk_masuk SET jumlah = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
+        
+        if ($conn->query($sqlUpdate) === TRUE) {
+            $message = "Jumlah stok berhasil diperbarui menjadi $jumlahBaru!";
+        } else {
+            $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
+        }
     } else {
-        $message = "Error: " . $sql . "<br>" . $conn->error;
+        // Produk belum ada, insert produk baru
+        $sqlInsert = "INSERT INTO produk_masuk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
+
+        if ($conn->query($sqlInsert) === TRUE) {
+            $message = "Stok berhasil ditambahkan!";
+        } else {
+            $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
+        }
     }
 }
 
@@ -129,9 +151,8 @@ $conn->close();
 </head>
 
 <body>
-
   <div class="container">
-    <button class="close-button" onclick="window.location.href='index.php'">&times;</button>
+    <button class="close-button" onclick="window.location.href='produk_masuk.php'">&times;</button>
     <h2>
       <span class="plus-icon">+</span> Tambahkan Stok
     </h2>
@@ -152,12 +173,11 @@ $conn->close();
       <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>
 
       <label for="tanggal">Tanggal</label>
-      <input type="date" name="tanggal" id="tanggal" required> <!-- Input untuk tanggal -->
+      <input type="date" name="tanggal" id="tanggal" required>
 
       <input type="submit" value="Simpan">
     </form>
   </div>
-
 </body>
 
 </html>
