@@ -1,12 +1,4 @@
 <?php
-session_start();
-require "functions.php";
-
-if (!isset($_SESSION["login"])) {
-    header("Location: login.php");
-    exit;
-}
-
 include "db.php";
 
 if ($conn->connect_error) {
@@ -17,61 +9,38 @@ $message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
-    $merk = $_POST['merk'];
     $jumlah = $_POST['jumlah'];
     $tanggal = $_POST['tanggal']; // Menangkap input tanggal
 
-    // Cek apakah produk sudah ada di tabel produk
-    $sqlCheckProduk = "SELECT jumlah, produk_masuk, tanggal FROM produk WHERE nama_produk = '$nama_produk'";
-    $resultCheckProduk = $conn->query($sqlCheckProduk);
+    // Cek apakah produk sudah ada di tabel produk_keluar
+    $sqlCheck = "SELECT jumlah FROM produk_keluar WHERE nama_produk = '$nama_produk'";
+    $resultCheck = $conn->query($sqlCheck);
 
-    // Cek apakah produk sudah ada di tabel produk_masuk
-    $sqlCheckMasuk = "SELECT jumlah FROM produk WHERE nama_produk = '$nama_produk'";
-    $resultCheckMasuk = $conn->query($sqlCheckMasuk);
-
-    if ($resultCheckMasuk->num_rows > 0) {
-        // Produk sudah ada di tabel produk_masuk
-        $rowMasuk = $resultCheckMasuk->fetch_assoc();
-        $jumlahLama = $rowMasuk['jumlah'];
+    if ($resultCheck->num_rows > 0) {
+        // Produk sudah ada, ambil jumlah saat ini
+        $row = $resultCheck->fetch_assoc();
+        $jumlahLama = $row['jumlah'];
 
         // Hitung jumlah baru
         $jumlahBaru = $jumlahLama + $jumlah;
 
-        // Update jumlah produk_masuk
-        $sqlUpdateMasuk = "UPDATE produk SET jumlah = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
+        // Update jumlah produk
+        $sqlUpdate = "UPDATE produk_keluar SET jumlah = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
         
-        if ($conn->query($sqlUpdateMasuk) === TRUE) {
-            $message = "Jumlah stok produk masuk berhasil diperbarui menjadi $jumlahBaru!";
+        if ($conn->query($sqlUpdate) === TRUE) {
+            $message = "Jumlah stok berhasil diperbarui menjadi $jumlahBaru!";
         } else {
-            $message = "Error: " . $sqlUpdateMasuk . "<br>" . $conn->error;
+            $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
         }
     } else {
-        // Produk belum ada di tabel produk_masuk, insert produk baru
-        $sqlInsertMasuk = "INSERT INTO produk_masuk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
+        // Produk belum ada, insert produk baru ke tabel produk_keluar
+        $sqlInsert = "INSERT INTO produk_keluar (nama_produk, jumlah, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
 
-        if ($conn->query($sqlInsertMasuk) === TRUE) {
-            $message = "Stok produk berhasil ditambahkan!";
+        if ($conn->query($sqlInsert) === TRUE) {
+            $message = "Stok berhasil ditambahkan!";
         } else {
-            $message = "Error: " . $sqlInsertMasuk . "<br>" . $conn->error;
+            $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
         }
-    }
-
-    // Update atau insert ke tabel produk
-    if ($resultCheckProduk->num_rows > 0) {
-        // Produk sudah ada, update jumlah dan tanggal
-        $rowProduk = $resultCheckProduk->fetch_assoc();
-        $jumlahProdukLama = $rowProduk['jumlah'];
-        $produkMasukLama = $rowProduk['produk_masuk']; // Ambil produk_masuk lama
-
-        // Hitung produk_masuk baru
-        $produkMasukBaru = $produkMasukLama + $jumlah;
-
-        $sqlUpdateProduk = "UPDATE produk SET produk_masuk = $produkMasukBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
-        $conn->query($sqlUpdateProduk);
-    } else {
-        // Produk belum ada, insert produk baru
-        $sqlInsertProduk = "INSERT INTO produk (nama_produk, merk, jumlah, produk_masuk, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$jumlah', '$tanggal')";
-        $conn->query($sqlInsertProduk);
     }
 }
 
@@ -84,7 +53,7 @@ $conn->close();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambahkan Stok</title>
+  <title>Tambahkan Stok Produk Keluar</title>
   <style>
   body {
     font-family: Arial, sans-serif;
@@ -181,9 +150,9 @@ $conn->close();
 
 <body>
   <div class="container">
-    <button class="close-button" onclick="window.location.href='produk_masuk.php'">&times;</button>
+    <button class="close-button" onclick="window.location.href='produk_keluar.php'">&times;</button>
     <h2>
-      <span class="plus-icon">+</span> Tambahkan Stok
+      <span class="plus-icon">+</span> Tambahkan Produk Keluar
     </h2>
     <div class="divider"></div>
 
@@ -194,9 +163,6 @@ $conn->close();
     <form method="POST" action="" autocomplete="off">
       <label for="nama_produk">Nama Produk</label>
       <input type="text" name="nama_produk" id="nama_produk" placeholder="Tambahkan nama produk" required>
-
-      <label for="merk">Merek</label>
-      <input type="text" name="merk" id="merk" placeholder="Tambahkan merk" required>
 
       <label for="jumlah">Jumlah</label>
       <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>

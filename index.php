@@ -76,7 +76,6 @@ if (!$result) {
     </a>
   </div>
 
-
   <div class="content-wrapper">
     <table>
       <thead>
@@ -90,20 +89,20 @@ if (!$result) {
       </thead>
       <tbody>
         <?php
-        if (mysqli_num_rows($result) > 0) {
-          while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["nama_produk"] . "</td>";
-            echo "<td>" . $row["produk_masuk"] . "</td>";
-            echo "<td>" . $row["produk_keluar"] . "</td>";
-            echo "<td>" . $row["total"] . "</td>";
-            echo "</tr>";
-          }
-        } else {
-          echo "<tr><td colspan='5'>Tidak ada data</td></tr>";
-        }
-        ?>
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td>" . $row["id"] . "</td>";
+                        echo "<td>" . $row["nama_produk"] . "</td>";
+                        echo "<td>" . $row["produk_masuk"] . "</td>";
+                        echo "<td>" . $row["produk_keluar"] . "</td>";
+                        echo "<td>" . $row["total"] . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>Tidak ada data</td></tr>";
+                }
+                ?>
       </tbody>
     </table>
   </div>
