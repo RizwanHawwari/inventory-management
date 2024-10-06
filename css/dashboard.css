@@ -147,7 +147,11 @@ th {
 }
 
 @media (max-width: 768px) {
+  .dashboard-header h2 {
+    font-size: 15px;
+  }
   .content-wrapper {
+    padding: 20px 5px;
     height: calc(100vh - 150px);
   }
   .sidebar {

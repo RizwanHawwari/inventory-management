@@ -147,6 +147,9 @@ th {
 }
 
 @media (max-width: 768px) {
+  .dashboard-header h2 {
+    font-size: 18px;
+  }
   .content-wrapper {
     height: calc(100vh - 150px);
   }
