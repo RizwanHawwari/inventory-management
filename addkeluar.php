@@ -10,37 +10,46 @@ $message = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
     $jumlah = $_POST['jumlah'];
-    $tanggal = $_POST['tanggal']; // Menangkap input tanggal
+    $tanggal = $_POST['tanggal'];
 
-    // Cek apakah produk sudah ada di tabel produk_keluar
-    $sqlCheck = "SELECT jumlah FROM produk_keluar WHERE nama_produk = '$nama_produk'";
-    $resultCheck = $conn->query($sqlCheck);
+    // Cek apakah produk sudah terdaftar di produk_masuk
+    $produkCheck = "SELECT * FROM produk WHERE nama_produk = '$nama_produk' AND produk_masuk > 0";
+    $rCheck = $conn->query($produkCheck);
 
-    if ($resultCheck->num_rows > 0) {
-        // Produk sudah ada, ambil jumlah saat ini
-        $row = $resultCheck->fetch_assoc();
-        $jumlahLama = $row['jumlah'];
+    if ($rCheck->num_rows > 0) {
+        // Cek apakah produk sudah ada di tabel produk
+        $sqlCheck = "SELECT produk_keluar FROM produk WHERE nama_produk = '$nama_produk'";
+        $resultCheck = $conn->query($sqlCheck);
 
-        // Hitung jumlah baru
-        $jumlahBaru = $jumlahLama + $jumlah;
+        if ($resultCheck->num_rows > 0) {
+            // Produk sudah ada, ambil jumlah saat ini
+            $row = $resultCheck->fetch_assoc();
+            $jumlahLama = $row['produk_keluar'];
 
-        // Update jumlah produk
-        $sqlUpdate = "UPDATE produk_keluar SET jumlah = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
-        
-        if ($conn->query($sqlUpdate) === TRUE) {
-            $message = "Jumlah stok berhasil diperbarui menjadi $jumlahBaru!";
+            // Hitung jumlah baru
+            $jumlahBaru = $jumlahLama + $jumlah;
+
+            // Update jumlah produk
+            $sqlUpdate = "UPDATE produk SET produk_keluar = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
+            
+            if ($conn->query($sqlUpdate) === TRUE) {
+                $message = "Jumlah produk keluar berhasil diperbarui menjadi $jumlahBaru!";
+            } else {
+                $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
+            }
         } else {
-            $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
+            // Produk belum ada, insert produk baru ke tabel produk
+            $sqlInsert = "INSERT INTO produk (nama_produk, produk_keluar, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
+
+            if ($conn->query($sqlInsert) === TRUE) {
+                $message = "Produk berhasil ditambahkan!";
+            } else {
+                $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
+            }
         }
     } else {
-        // Produk belum ada, insert produk baru ke tabel produk_keluar
-        $sqlInsert = "INSERT INTO produk_keluar (nama_produk, jumlah, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
-
-        if ($conn->query($sqlInsert) === TRUE) {
-            $message = "Stok berhasil ditambahkan!";
-        } else {
-            $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
-        }
+        // Jika produk tidak terdaftar di produk_masuk
+        $message = "Penambahan produk keluar gagal! Produk '$nama_produk' belum terdaftar di produk masuk.";
     }
 }
 
@@ -53,7 +62,7 @@ $conn->close();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambahkan Stok Produk Keluar</title>
+  <title>Tambahkan Stok Produk</title>
   <style>
   body {
     font-family: Arial, sans-serif;
@@ -128,7 +137,8 @@ $conn->close();
   .message {
     text-align: center;
     margin: 10px 0;
-    color: green;
+    color: red;
+    /* Ganti menjadi merah untuk menandakan kesalahan */
   }
 
   .close-button {
@@ -152,7 +162,7 @@ $conn->close();
   <div class="container">
     <button class="close-button" onclick="window.location.href='produk_keluar.php'">&times;</button>
     <h2>
-      <span class="plus-icon">+</span> Tambahkan Produk Keluar
+      <span class="plus-icon">+</span> Tambahkan Produk
     </h2>
     <div class="divider"></div>
 

@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         // Produk belum ada di tabel produk_masuk, insert produk baru
-        $sqlInsertMasuk = "INSERT INTO produk_masuk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
+        $sqlInsertMasuk = "INSERT INTO produk (nama_produk, merk, jumlah, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$tanggal')";
 
         if ($conn->query($sqlInsertMasuk) === TRUE) {
             $message = "Stok produk berhasil ditambahkan!";

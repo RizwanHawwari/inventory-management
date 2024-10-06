@@ -9,7 +9,8 @@ if (!isset($_SESSION["login"])) {
 
 include 'db.php';
 
-$sql = "SELECT id, nama_produk, jumlah, tanggal FROM produk_keluar";
+// Ambil data dari tabel produk
+$sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -84,7 +85,8 @@ if (!$result) {
       <tbody>
         <?php
                 $search = isset($_GET['search']) ? $_GET['search'] : '';
-                $sql = "SELECT id, nama_produk, jumlah, tanggal FROM produk_keluar WHERE nama_produk LIKE '%$search%'";
+                // Mengambil data dari tabel produk berdasarkan pencarian
+                $sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk WHERE nama_produk LIKE '%$search%'";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
