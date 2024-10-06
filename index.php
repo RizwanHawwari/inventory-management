@@ -9,17 +9,36 @@ if (!isset($_SESSION["login"])) {
 
 include 'db.php';
 
+// Inisialisasi variabel pagination
+$limit = 5; // Jumlah data per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
+$offset = ($page - 1) * $limit; // Hitung offset
+
 $search = "";
 if (isset($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
 }
 
+// Hitung total data untuk pagination
+$sql_count = "SELECT COUNT(*) as total FROM produk";
+if (!empty($search)) {
+    $sql_count .= " WHERE nama_produk LIKE '%$search%'";
+}
+
+$result_count = mysqli_query($conn, $sql_count);
+$row_count = mysqli_fetch_assoc($result_count);
+$total_rows = $row_count['total'];
+$total_pages = ceil($total_rows / $limit); // Total halaman
+
+// Query untuk mengambil data produk dengan pagination
 $sql = "SELECT id, nama_produk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
         FROM produk";
 
 if (!empty($search)) {
     $sql .= " WHERE nama_produk LIKE '%$search%'";
 }
+
+$sql .= " LIMIT $limit OFFSET $offset"; // Tambahkan LIMIT dan OFFSET untuk pagination
 
 $result = mysqli_query($conn, $sql);
 
@@ -90,7 +109,7 @@ if (!$result) {
       <tbody>
         <?php
                 if (mysqli_num_rows($result) > 0) {
-                  $i = 1;
+                  $i = $offset + 1; // Untuk mengurutkan ID di tiap halaman
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
                         echo "<td>" . $i . "</td>";
@@ -107,6 +126,24 @@ if (!$result) {
                 ?>
       </tbody>
     </table>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+      <?php if ($page > 1): ?>
+      <a href="?page=<?= $page - 1 ?>&search=<?= htmlspecialchars($search); ?>">&laquo; Previous</a>
+      <?php endif; ?>
+
+      <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+      <a href="?page=<?= $i ?>&search=<?= htmlspecialchars($search); ?>" class="<?= ($i == $page) ? 'active' : '' ?>">
+        <?= $i ?>
+      </a>
+      <?php endfor; ?>
+
+      <?php if ($page < $total_pages): ?>
+      <a href="?page=<?= $page + 1 ?>&search=<?= htmlspecialchars($search); ?>">Next &raquo;</a>
+      <?php endif; ?>
+    </div>
+
   </div>
 
   <script>

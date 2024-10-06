@@ -12,8 +12,20 @@ include 'db.php';
 // Mengambil nilai pencarian
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
-// Query untuk mengambil produk berdasarkan pencarian
-$sql = "SELECT id, nama_produk, merk, produk_masuk, jumlah, tanggal FROM produk WHERE nama_produk LIKE '%$search%'";
+// Mengatur jumlah data per halaman
+$limit = 5; // Jumlah data per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
+$offset = ($page - 1) * $limit; // Menghitung dari mana data akan ditampilkan
+
+// Query untuk menghitung total data
+$totalResult = mysqli_query($conn, "SELECT COUNT(*) as total FROM produk WHERE nama_produk LIKE '%$search%'");
+$totalData = mysqli_fetch_assoc($totalResult)['total'];
+
+// Query untuk mengambil produk dengan limit dan offset
+$sql = "SELECT id, nama_produk, merk, produk_masuk, jumlah, tanggal 
+        FROM produk 
+        WHERE nama_produk LIKE '%$search%' 
+        LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -28,7 +40,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Masuk</title>
-  <link rel="stylesheet" href="css/produkmasuk.css">
+  <link rel="stylesheet" href="css/pmasuk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -107,6 +119,28 @@ if (!$result) {
         ?>
       </tbody>
     </table>
+
+    <div class="pagination">
+      <?php
+      $totalPages = ceil($totalData / $limit);
+
+      if ($page > 1) {
+        echo '<a href="?search=' . $search . '&page=' . ($page - 1) . '">&laquo; Prev</a>';
+      }
+
+      for ($i = 1; $i <= $totalPages; $i++) {
+        if ($i == $page) {
+          echo '<a class="active">' . $i . '</a>';
+        } else {
+          echo '<a href="?search=' . $search . '&page=' . $i . '">' . $i . '</a>';
+        }
+      }
+
+      if ($page < $totalPages) {
+        echo '<a href="?search=' . $search . '&page=' . ($page + 1) . '">Next &raquo;</a>';
+      }
+      ?>
+    </div>
   </div>
 
   <script>

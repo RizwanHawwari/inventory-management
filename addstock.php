@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sqlInsertProduk = "INSERT INTO produk (nama_produk, merk, jumlah, produk_masuk, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$jumlah', '$tanggal')";
         if ($conn->query($sqlInsertProduk) === TRUE) {
             $message = "Stok produk berhasil ditambahkan!";
-            error_log("Produk: $nama_produk - Stok ditambahkan, jumlah: $jumlah pada tanggal: $tanggal", 3, "log.txt"); // Log to file
+            error_log("Produk: $nama_produk - Stok ditambahkan, jumlah: $jumlah pada tanggal: $tanggal\n", 3, "log.txt"); // Log to file
         } else {
             $message = "Error: " . $sqlInsertProduk . "<br>" . $conn->error;
             error_log("Error menambahkan produk baru: $nama_produk. SQL Error: " . $conn->error, 3, "log.txt");

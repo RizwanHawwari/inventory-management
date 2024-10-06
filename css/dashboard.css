@@ -151,7 +151,7 @@ th {
     font-size: 15px;
   }
   .content-wrapper {
-    padding: 20px 5px;
+    padding: 20px 0px;
     height: calc(100vh - 150px);
   }
   .sidebar {

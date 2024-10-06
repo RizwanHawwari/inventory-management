@@ -75,10 +75,10 @@ if ( isset($_POST["submit"]) ) {
 
       <form action="" method="post" autocomplete="off">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required style="color: #fff;">
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required style="color: #fff;">
 
         <div class="remember">
           <input type="checkbox" id="remember" name="remember">

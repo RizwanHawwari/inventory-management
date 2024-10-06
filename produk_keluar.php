@@ -9,8 +9,29 @@ if (!isset($_SESSION["login"])) {
 
 include 'db.php';
 
-// Ambil data dari tabel produk
-$sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk";
+// Ambil data pencarian, jika ada
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+
+// Tentukan jumlah data per halaman
+$limit = 5;
+
+// Hitung total data
+$totalQuery = "SELECT COUNT(*) AS total FROM produk WHERE nama_produk LIKE '%$search%'";
+$totalResult = mysqli_query($conn, $totalQuery);
+$totalRow = mysqli_fetch_assoc($totalResult);
+$totalData = $totalRow['total'];
+
+// Hitung total halaman
+$totalPages = ceil($totalData / $limit);
+
+// Ambil halaman saat ini (default halaman 1)
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page - 1) * $limit;
+
+// Query untuk mengambil data produk berdasarkan pencarian dan halaman
+$sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk 
+        WHERE nama_produk LIKE '%$search%' 
+        LIMIT $start, $limit";
 $result = mysqli_query($conn, $sql);
 
 if (!$result) {
@@ -47,7 +68,8 @@ if (!$result) {
 
   <!-- Search Bar -->
   <form method="GET" action="" class="search-bar">
-    <input type="text" name="search" placeholder="cari" class="search-input">
+    <input type="text" name="search" placeholder="cari" class="search-input"
+      value="<?php echo htmlspecialchars($search); ?>">
   </form>
 
   <div class="sidebar" id="sidebar">
@@ -84,28 +106,41 @@ if (!$result) {
       </thead>
       <tbody>
         <?php
-                $search = isset($_GET['search']) ? $_GET['search'] : '';
-                // Mengambil data dari tabel produk berdasarkan pencarian
-                $sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk WHERE nama_produk LIKE '%$search%'";
-                $result = mysqli_query($conn, $sql);
-
-                if (mysqli_num_rows($result) > 0) {
-                  $i = 1;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>" . $i . "</td>";
-                        echo "<td>" . $row["nama_produk"] . "</td>";
-                        echo "<td>" . $row["jumlah"] . "</td>";
-                        echo "<td>" . $row["tanggal"] . "</td>";
-                        $i++;
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4'>Tidak ada data</td></tr>";
-                }
-                ?>
+        if (mysqli_num_rows($result) > 0) {
+          $i = $start + 1; // Penomoran sesuai halaman
+          while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $i . "</td>";
+            echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["jumlah"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
+            $i++;
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='4'>Tidak ada data</td></tr>";
+        }
+        ?>
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <?php if ($page > 1): ?>
+      <a href="?page=<?php echo $page - 1; ?>&search=<?php echo htmlspecialchars($search); ?>">&laquo; Previous</a>
+      <?php endif; ?>
+
+      <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+      <a href="?page=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search); ?>"
+        class="<?php echo ($i == $page) ? 'active' : ''; ?>">
+        <?php echo $i; ?>
+      </a>
+      <?php endfor; ?>
+
+      <?php if ($page < $totalPages): ?>
+      <a href="?page=<?php echo $page + 1; ?>&search=<?php echo htmlspecialchars($search); ?>">Next &raquo;</a>
+      <?php endif; ?>
+    </div>
   </div>
 
   <script>
