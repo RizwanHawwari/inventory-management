@@ -90,12 +90,14 @@ if (!$result) {
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
+                  $i = 1;
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
-                        echo "<td>" . $row["id"] . "</td>";
+                        echo "<td>" . $i . "</td>";
                         echo "<td>" . $row["nama_produk"] . "</td>";
                         echo "<td>" . $row["jumlah"] . "</td>";
                         echo "<td>" . $row["tanggal"] . "</td>";
+                        $i++;
                         echo "</tr>";
                     }
                 } else {

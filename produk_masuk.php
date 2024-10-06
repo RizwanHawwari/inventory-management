@@ -52,7 +52,6 @@ if (!$result) {
   <form method="GET" action="" class="search-bar" autocomplete="off">
     <input type="text" name="search" placeholder="cari" class="search-input"
       value="<?php echo htmlspecialchars($search); ?>">
-    <button type="submit" class="search-button">Cari</button>
   </form>
 
   <div class="sidebar" id="sidebar">
@@ -91,13 +90,15 @@ if (!$result) {
       <tbody>
         <?php
         if (mysqli_num_rows($result) > 0) {
+          $i = 1;
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
+                echo "<td>" . htmlspecialchars($i) . "</td>";
                 echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
                 echo "<td>" . htmlspecialchars($row["merk"]) . "</td>";
                 echo "<td>" . htmlspecialchars($row["produk_masuk"]) . "</td>";
                 echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
+                $i++;
                 echo "</tr>";
             }
         } else {
