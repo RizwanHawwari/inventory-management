@@ -54,7 +54,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Stok Produk</title>
-  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -65,7 +65,9 @@ if (!$result) {
     <div class="hamburger">
       <i class="fas fa-bars" id="hamburger-icon"></i>
     </div>
+
     <h2>DASHBOARD</h2>
+
     <div class="search-container">
       <form action="" method="GET" autocomplete="off">
         <input type="text" name="search" placeholder="Cari" value="<?= htmlspecialchars($search); ?>">

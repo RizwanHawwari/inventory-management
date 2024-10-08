@@ -7,6 +7,10 @@ if ($conn->connect_error) {
 
 $message = '';
 
+// Ambil produk yang memiliki produk_masuk lebih dari 0
+$sqlProduk = "SELECT nama_produk FROM produk WHERE produk_masuk > 0";
+$resultProduk = $conn->query($sqlProduk);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
     $jumlah = $_POST['jumlah'];
@@ -54,6 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $conn->close();
+?>
+
 ?>
 
 <!DOCTYPE html>
@@ -172,7 +178,16 @@ $conn->close();
 
     <form method="POST" action="" autocomplete="off">
       <label for="nama_produk">Nama Produk</label>
-      <input type="text" name="nama_produk" id="nama_produk" placeholder="Tambahkan nama produk" required>
+      <select name="nama_produk" id="nama_produk" required>
+        <option value="">Pilih produk</option>
+        <?php
+        if ($resultProduk->num_rows > 0) {
+            while ($rowProduk = $resultProduk->fetch_assoc()) {
+                echo "<option value='" . $rowProduk['nama_produk'] . "'>" . $rowProduk['nama_produk'] . "</option>";
+            }
+        }
+        ?>
+      </select>
 
       <label for="jumlah">Jumlah</label>
       <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>
