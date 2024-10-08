@@ -40,7 +40,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Masuk</title>
-  <link rel="stylesheet" href="css/pmasuk.css">
+  <link rel="stylesheet" href="css/produk_masuk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -52,7 +52,7 @@ if (!$result) {
       <i class="fas fa-bars" id="hamburger-icon"></i>
     </div>
     <h2>PRODUK MASUK</h2>
-    <a href="addstock.php">
+    <a href="addstock.php" class="addstock-container">
       <button class="add-stock add-stock-button">
         <span class="plus-icon">+</span>
         Tambahkan Stok

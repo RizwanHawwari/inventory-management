@@ -16,7 +16,7 @@ body {
   top: 0;
   width: 250px;
   height: 100%;
-  background-color: #15beed;
+  background-color: #6488ea;
   transition: left 0.3s ease-in-out;
 }
 
@@ -110,21 +110,22 @@ th {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #fff;
-  background-color: #15beed;
+  background-color: #6488ea;
   text-align: center;
 }
 
 .dashboard-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  background-color: #15beed;
+  background-color: #6488ea;
   color: white;
   padding: 15px;
 }
 
 .dashboard-header h2 {
   margin: 0;
+  margin-left: 15px;
 }
 
 .hamburger {
@@ -163,6 +164,10 @@ th {
 }
 
 /* add stock */
+.addstock-container {
+  margin-left: auto;
+}
+
 .add-stock {
   cursor: pointer;
   margin-left: 10px;
@@ -224,7 +229,7 @@ th {
 }
 
 .pagination a.active {
-  background-color: #15beed;
+  background-color: #6488ea;
   color: white;
 }
 
