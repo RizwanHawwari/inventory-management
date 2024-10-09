@@ -238,3 +238,84 @@ th {
   background-color: #8a8db0;
   color: white;
 }
+
+/* edit icon */
+.edit-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #111;
+  font-size: 1.5em;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.edit-icon i {
+  margin: 0;
+}
+
+/* popup form */
+.popup-form {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 1000;
+  width: 400px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.popup-header i {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.popup-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.popup-form input[type="text"],
+.popup-form input[type="number"] {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-form input[type="submit"] {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.popup-form input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 20px;
+  float: right;
+}

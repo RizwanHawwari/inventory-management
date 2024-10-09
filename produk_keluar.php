@@ -29,7 +29,8 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
 // Query untuk mengambil data produk berdasarkan pencarian dan halaman
-$sql = "SELECT id, nama_produk, produk_keluar AS jumlah, tanggal FROM produk 
+$sql = "SELECT id, nama_produk, merk, produk_keluar AS jumlah, tanggal 
+        FROM produk 
         WHERE nama_produk LIKE '%$search%' 
         LIMIT $start, $limit";
 $result = mysqli_query($conn, $sql);
@@ -46,7 +47,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Keluar</title>
-  <link rel="stylesheet" href="css/produk_keluar.css">
+  <link rel="stylesheet" href="css/produkk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -100,27 +101,36 @@ if (!$result) {
         <tr>
           <th>ID</th>
           <th>Nama Produk</th>
+          <th>Merek</th>
           <th>Jumlah</th>
           <th>Tanggal</th>
+          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
         <?php
-        if (mysqli_num_rows($result) > 0) {
-          $i = $start + 1; // Penomoran sesuai halaman
-          while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $i . "</td>";
-            echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["jumlah"]) . "</td>";
-            echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
-            $i++;
-            echo "</tr>";
-          }
-        } else {
-          echo "<tr><td colspan='4'>Tidak ada data</td></tr>";
-        }
-        ?>
+  if (mysqli_num_rows($result) > 0) {
+    $i = $start + 1; // Penomoran sesuai halaman
+    while ($row = mysqli_fetch_assoc($result)) {
+      echo "<tr>";
+      echo "<td>" . $i . "</td>";
+      echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
+      echo "<td>" . htmlspecialchars($row["merk"]) . "</td>"; // Menampilkan Merek
+      echo "<td>" . htmlspecialchars($row["jumlah"]) . "</td>";
+      echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
+      echo "<td>
+              <a href='javascript:void(0);' class='edit-icon' 
+                 onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", \"" . htmlspecialchars($row['jumlah']) . "\", \"" . htmlspecialchars($row['tanggal']) . "\")'>
+                  <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
+              </a>
+            </td>";
+      $i++;
+      echo "</tr>";
+    }
+  } else {
+    echo "<tr><td colspan='6'>Tidak ada data</td></tr>";
+  }
+  ?>
       </tbody>
     </table>
 
@@ -143,6 +153,27 @@ if (!$result) {
     </div>
   </div>
 
+  <!-- Pop-Up Form -->
+  <div id="popup-form" class="popup-form" style="display:none;">
+    <div class="form-container">
+      <span class="close" id="close-popup">&times;</span>
+      <div class="popup-header">
+        <i class="fas fa-edit"></i> <span>Edit Produk</span>
+      </div>
+      <hr>
+      <form id="form-produk" method="POST" action="proses_produk.php">
+        <input type="hidden" name="id" id="product-id">
+        <label for="nama_produk">Nama Produk:</label>
+        <input type="text" name="nama_produk" id="nama_produk" required>
+        <label for="merk">Merek:</label>
+        <input type="text" name="merk" id="merk" required>
+        <label for="produk_keluar">Jumlah:</label>
+        <input type="number" name="produk_keluar" id="produk_keluar" required>
+        <input type="submit" value="Simpan">
+      </form>
+    </div>
+  </div>
+
   <script>
   const hamburgerIcon = document.getElementById('hamburger-icon');
   const sidebar = document.getElementById('sidebar');
@@ -156,6 +187,28 @@ if (!$result) {
   closeBtn.addEventListener('click', () => {
     sidebar.classList.remove('active');
   });
+
+  // Tambahkan deklarasi variabel popupForm
+  const popupForm = document.getElementById('popup-form');
+  const closePopup = document.getElementById('close-popup');
+
+  function openPopup(id, nama_produk, merk, produk_keluar) {
+    document.getElementById('product-id').value = id;
+    document.getElementById('nama_produk').value = nama_produk;
+    document.getElementById('merk').value = merk;
+    document.getElementById('produk_keluar').value = produk_keluar;
+    popupForm.style.display = 'flex';
+  }
+
+  closePopup.onclick = function() {
+    popupForm.style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target == popupForm) {
+      popupForm.style.display = 'none';
+    }
+  };
   </script>
 </body>
 

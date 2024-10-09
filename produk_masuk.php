@@ -1,32 +1,42 @@
 <?php
 session_start();
 require "functions.php";
+include 'db.php';
 
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
 
-include 'db.php';
-
-// Mengambil nilai pencarian
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
-// Mengatur jumlah data per halaman
-$limit = 5; // Jumlah data per halaman
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
-$offset = ($page - 1) * $limit; // Menghitung dari mana data akan ditampilkan
+$limit = 5;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
 
-// Query untuk menghitung total data
 $totalResult = mysqli_query($conn, "SELECT COUNT(*) as total FROM produk WHERE nama_produk LIKE '%$search%'");
 $totalData = mysqli_fetch_assoc($totalResult)['total'];
 
-// Query untuk mengambil produk dengan limit dan offset
 $sql = "SELECT id, nama_produk, merk, produk_masuk, jumlah, tanggal 
         FROM produk 
         WHERE nama_produk LIKE '%$search%' 
         LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $id = mysqli_real_escape_string($conn, $_POST['id']);
+  $nama_produk = mysqli_real_escape_string($conn, $_POST['nama_produk']);
+  $merk = mysqli_real_escape_string($conn, $_POST['merk']);
+  $produk_masuk = mysqli_real_escape_string($conn, $_POST['produk_masuk']);
+
+  $sql = "UPDATE produk SET nama_produk='$nama_produk', merk='$merk', produk_masuk='$produk_masuk', tanggal=NOW() WHERE id='$id'";
+  if (mysqli_query($conn, $sql)) {
+    header("Location: produk_masuk.php?message=Data berhasil diperbarui&search=" . urlencode($search));
+    exit;
+} else {
+    die("Update failed: " . mysqli_error($conn));
+}
+}
 
 if (!$result) {
     die("Query failed: " . mysqli_error($conn));
@@ -40,7 +50,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Masuk</title>
-  <link rel="stylesheet" href="css/produk_masuk.css">
+  <link rel="stylesheet" href="css/produkmasuk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -89,6 +99,11 @@ if (!$result) {
   </div>
 
   <div class="content-wrapper">
+    <?php if (isset($_GET['message'])): ?>
+    <div class="message">
+      <?php echo htmlspecialchars($_GET['message']); ?>
+    </div>
+    <?php endif; ?>
     <table>
       <thead>
         <tr>
@@ -96,7 +111,8 @@ if (!$result) {
           <th>Nama Produk</th>
           <th>Merk</th>
           <th>Produk Masuk</th>
-          <th>Tanggal</th>
+          <th>Terakhir Diubah</th>
+          <th>Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -110,6 +126,12 @@ if (!$result) {
                 echo "<td>" . htmlspecialchars($row["merk"]) . "</td>";
                 echo "<td>" . htmlspecialchars($row["produk_masuk"]) . "</td>";
                 echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
+                echo "<td>
+                <a href='javascript:void(0);' class='edit-icon' 
+                   onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", " . htmlspecialchars($row['produk_masuk']) . ")'>
+                    <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
+                </a>
+            </td>";
                 $i++;
                 echo "</tr>";
             }
@@ -143,6 +165,32 @@ if (!$result) {
     </div>
   </div>
 
+  <div id="popup-form" class="popup-form" style="display:none;">
+    <div class="form-container">
+      <span class="close" id="close-popup">&times;</span>
+      <div class="popup-header">
+        <i class="fas fa-edit"></i> <span>Edit Produk</span>
+      </div>
+      <hr>
+      <form id="form-produk" method="POST" action="" autocomplete="off">
+        <input type="hidden" name="id" id="product-id">
+        <label for="nama_produk">Nama Produk:</label>
+        <input type="text" name="nama_produk" id="nama_produk" required>
+        <label for="merk">Merk:</label>
+        <input type="text" name="merk" id="merk" required>
+        <label for="produk_masuk">Jumlah:</label>
+        <input type="number" name="produk_masuk" id="produk_masuk" required>
+
+        <div class="form-buttons">
+          <input type="submit" value="Simpan" style="background-color: #6488ea;">
+          <button type="button" class="delete-button" onclick="confirmDelete()"><i class="fas fa-trash"></i> Hapus
+            Produk</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
   <script>
   const hamburgerIcon = document.getElementById('hamburger-icon');
   const sidebar = document.getElementById('sidebar');
@@ -156,6 +204,36 @@ if (!$result) {
   closeBtn.addEventListener('click', () => {
     sidebar.classList.remove('active');
   });
+
+  const popupForm = document.getElementById('popup-form');
+  const closePopup = document.getElementById('close-popup');
+
+  // Popup Edit
+  function openPopup(id, nama_produk, merk, produk_masuk) {
+    document.getElementById('product-id').value = id;
+    document.getElementById('nama_produk').value = nama_produk;
+    document.getElementById('merk').value = merk;
+    document.getElementById('produk_masuk').value = produk_masuk;
+    popupForm.style.display = 'flex';
+  }
+
+  closePopup.onclick = function() {
+    popupForm.style.display = 'none';
+  };
+
+  window.onclick = function(event) {
+    if (event.target == popupForm) {
+      popupForm.style.display = 'none';
+    }
+  };
+
+  // Fungsi untuk mengkonfirmasi dan menghapus produk
+  function confirmDelete() {
+    const productId = document.getElementById('product-id').value;
+    if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+      window.location.href = 'delete_product.php?id=' + productId;
+    }
+  }
   </script>
 </body>
 
