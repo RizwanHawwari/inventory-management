@@ -12,23 +12,34 @@ include 'db.php';
 // Ambil data pencarian, jika ada
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
-// Tentukan jumlah data per halaman
+// Jika form update dikirim
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $id = mysqli_real_escape_string($conn, $_POST['id']);
+  $nama_produk = mysqli_real_escape_string($conn, $_POST['nama_produk']);
+  $merk = mysqli_real_escape_string($conn, $_POST['merk']);
+  $produk_keluar = mysqli_real_escape_string($conn, $_POST['produk_keluar']);
+
+  $sql = "UPDATE produk SET nama_produk='$nama_produk', merk='$merk', produk_keluar='$produk_keluar', tanggal=NOW() WHERE id='$id'";
+  
+  if (mysqli_query($conn, $sql)) {
+      header("Location: produk_keluar.php?message=Data berhasil diperbarui&search=" . urlencode($search));
+      exit;
+  } else {
+      die("Update failed: " . mysqli_error($conn));
+  }
+}
+
 $limit = 5;
 
-// Hitung total data
 $totalQuery = "SELECT COUNT(*) AS total FROM produk WHERE nama_produk LIKE '%$search%'";
 $totalResult = mysqli_query($conn, $totalQuery);
 $totalRow = mysqli_fetch_assoc($totalResult);
 $totalData = $totalRow['total'];
-
-// Hitung total halaman
 $totalPages = ceil($totalData / $limit);
 
-// Ambil halaman saat ini (default halaman 1)
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
-// Query untuk mengambil data produk berdasarkan pencarian dan halaman
 $sql = "SELECT id, nama_produk, merk, produk_keluar AS jumlah, tanggal 
         FROM produk 
         WHERE nama_produk LIKE '%$search%' 
@@ -47,7 +58,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Keluar</title>
-  <link rel="stylesheet" href="css/produkk.css">
+  <link rel="stylesheet" href="css/produkkeluar.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -96,6 +107,11 @@ if (!$result) {
   </div>
 
   <div class="content-wrapper">
+    <?php if (isset($_GET['message'])): ?>
+    <div class="message">
+      <?php echo htmlspecialchars($_GET['message']); ?>
+    </div>
+    <?php endif; ?>
     <table>
       <thead>
         <tr>
@@ -161,7 +177,7 @@ if (!$result) {
         <i class="fas fa-edit"></i> <span>Edit Produk</span>
       </div>
       <hr>
-      <form id="form-produk" method="POST" action="proses_produk.php">
+      <form id="form-produk" method="POST" action="">
         <input type="hidden" name="id" id="product-id">
         <label for="nama_produk">Nama Produk:</label>
         <input type="text" name="nama_produk" id="nama_produk" required>

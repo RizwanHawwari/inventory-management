@@ -154,7 +154,13 @@ th {
     font-size: 18px;
   }
   .content-wrapper {
+    padding: 20px 0;
     height: calc(100vh - 150px);
+  }
+  th,
+  td {
+    padding: 20px 10px;
+    font-size: 12px;
   }
   .sidebar {
     width: 60px;
@@ -318,4 +324,13 @@ th {
   cursor: pointer;
   font-size: 20px;
   float: right;
+}
+
+.message {
+  background-color: #dff0d8;
+  color: #3c763d;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #d6e9c6;
+  border-radius: 4px;
 }
