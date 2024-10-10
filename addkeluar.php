@@ -192,8 +192,8 @@ $conn->close();
         <option value="">Pilih Merek</option>
         <?php
         if ($resultProduk->num_rows > 0) {
-            while ($rowProduk = $resultProduk->fetch_assoc()) {
-                echo "<option value='" . $rowProduk['merk'] . "'>" . $rowProduk['merk'] . "</option>";
+            while ($rowMerk = $resultProduk->fetch_assoc()) {
+                echo "<option value='" . $rowMerk['merk'] . "'>" . $rowMerk['merk'] . "</option>";
             }
         }
         ?>
