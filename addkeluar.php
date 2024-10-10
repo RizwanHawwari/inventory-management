@@ -60,8 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -184,6 +182,18 @@ $conn->close();
         if ($resultProduk->num_rows > 0) {
             while ($rowProduk = $resultProduk->fetch_assoc()) {
                 echo "<option value='" . $rowProduk['nama_produk'] . "'>" . $rowProduk['nama_produk'] . "</option>";
+            }
+        }
+        ?>
+      </select>
+
+      <label for="merek">Merek</label>
+      <select name="merek" id="merek" required>
+        <option value="">Pilih Merek</option>
+        <?php
+        if ($resultProduk->num_rows > 0) {
+            while ($rowProduk = $resultProduk->fetch_assoc()) {
+                echo "<option value='" . $rowProduk['merk'] . "'>" . $rowProduk['merk'] . "</option>";
             }
         }
         ?>
