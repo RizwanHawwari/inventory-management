@@ -63,7 +63,7 @@ if (!$result) {
     </div>
     <h2>PRODUK MASUK</h2>
     <a href="addstock.php" class="addstock-container">
-      <button class="add-stock add-stock-button">
+      <button class="add-stock add-stock-button" onclick="showPopup()">
         <span class="plus-icon">+</span>
         Tambahkan Stok
       </button>
@@ -165,6 +165,7 @@ if (!$result) {
     </div>
   </div>
 
+  <!-- Popup Edit -->
   <div id="popup-form" class="popup-form" style="display:none;">
     <div class="form-container">
       <span class="close" id="close-popup">&times;</span>
