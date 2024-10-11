@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tanggal = $_POST['tanggal'];
 
     // Cek apakah produk sudah ada di tabel produk
-    $sqlCheckProduk = "SELECT jumlah, produk_masuk, tanggal FROM produk WHERE nama_produk = '$nama_produk'";
+    $sqlCheckProduk = "SELECT jumlah, produk_masuk, merk, tanggal FROM produk WHERE merk = '$merk'";
     $resultCheckProduk = $conn->query($sqlCheckProduk);
 
     // Update atau insert ke tabel produk
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Hitung produk_masuk baru
         $produkMasukBaru = $produkMasukLama + $jumlah;
 
-        $sqlUpdateProduk = "UPDATE produk SET produk_masuk = $produkMasukBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
+        $sqlUpdateProduk = "UPDATE produk SET produk_masuk = $produkMasukBaru, tanggal = '$tanggal' WHERE merk = '$merk'";
         if ($conn->query($sqlUpdateProduk) === TRUE) {
             $message = "Jumlah stok produk berhasil diperbarui!";
             error_log("Produk: $nama_produk - Stok diperbarui, produk masuk baru: $produkMasukBaru pada tanggal: $tanggal", 3, "log.txt"); // Log to file
