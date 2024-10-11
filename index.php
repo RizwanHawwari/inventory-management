@@ -31,7 +31,7 @@ $total_rows = $row_count['total'];
 $total_pages = ceil($total_rows / $limit); // Total halaman
 
 // Query untuk mengambil data produk dengan pagination
-$sql = "SELECT id, nama_produk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
+$sql = "SELECT id, nama_produk, merk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
         FROM produk";
 
 if (!empty($search)) {
@@ -115,7 +115,7 @@ if (!$result) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
                         echo "<td>" . $i . "</td>";
-                        echo "<td>" . $row["nama_produk"] . "</td>";
+                        echo "<td>" . $row["merk"] . "</td>";
                         echo "<td>" . $row["produk_masuk"] . "</td>";
                         echo "<td>" . $row["produk_keluar"] . "</td>";
                         echo "<td>" . $row["total"] . "</td>";

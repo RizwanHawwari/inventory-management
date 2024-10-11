@@ -29,34 +29,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rCheck = $conn->query($produkCheck);
 
     if ($rCheck->num_rows > 0) {
-        // Cek apakah produk sudah ada di tabel produk
-        $sqlCheck = "SELECT produk_keluar FROM produk WHERE nama_produk = '$nama_produk'";
-        $resultCheck = $conn->query($sqlCheck);
+        // Ambil jumlah produk_masuk untuk validasi
+        $sqlJumlahMasuk = "SELECT produk_masuk FROM produk WHERE nama_produk = '$nama_produk'";
+        $resultJumlahMasuk = $conn->query($sqlJumlahMasuk);
+        $rowJumlahMasuk = $resultJumlahMasuk->fetch_assoc();
+        $jumlahMasuk = $rowJumlahMasuk['produk_masuk'];
 
-        if ($resultCheck->num_rows > 0) {
-            // Produk sudah ada, ambil jumlah saat ini
-            $row = $resultCheck->fetch_assoc();
-            $jumlahLama = $row['produk_keluar'];
-
-            // Hitung jumlah baru
-            $jumlahBaru = $jumlahLama + $jumlah;
-
-            // Update jumlah produk
-            $sqlUpdate = "UPDATE produk SET produk_keluar = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
-            
-            if ($conn->query($sqlUpdate) === TRUE) {
-                $message = "Jumlah produk keluar berhasil diperbarui menjadi $jumlahBaru!";
-            } else {
-                $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
-            }
+        // Validasi apakah jumlah keluar melebihi jumlah masuk
+        if ($jumlah > $jumlahMasuk) {
+            $message = "Error: Jumlah produk keluar tidak boleh melebihi jumlah produk masuk ($jumlahMasuk).";
         } else {
-            // Produk belum ada, insert produk baru ke tabel produk
-            $sqlInsert = "INSERT INTO produk (nama_produk, produk_keluar, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
+            // Cek apakah produk sudah ada di tabel produk
+            $sqlCheck = "SELECT produk_keluar FROM produk WHERE nama_produk = '$nama_produk'";
+            $resultCheck = $conn->query($sqlCheck);
 
-            if ($conn->query($sqlInsert) === TRUE) {
-                $message = "Produk berhasil ditambahkan!";
+            if ($resultCheck->num_rows > 0) {
+                // Produk sudah ada, ambil jumlah saat ini
+                $row = $resultCheck->fetch_assoc();
+                $jumlahLama = $row['produk_keluar'];
+
+                // Hitung jumlah baru
+                $jumlahBaru = $jumlahLama + $jumlah;
+
+                // Update jumlah produk
+                $sqlUpdate = "UPDATE produk SET produk_keluar = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
+                
+                if ($conn->query($sqlUpdate) === TRUE) {
+                    $message = "Jumlah produk keluar berhasil diperbarui menjadi $jumlahBaru!";
+                } else {
+                    $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
+                }
             } else {
-                $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
+                // Produk belum ada, insert produk baru ke tabel produk
+                $sqlInsert = "INSERT INTO produk (nama_produk, produk_keluar, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
+
+                if ($conn->query($sqlInsert) === TRUE) {
+                    $message = "Produk berhasil ditambahkan!";
+                } else {
+                    $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
+                }
             }
         }
     } else {
@@ -124,7 +135,8 @@ $conn->close();
 
   input[type="text"],
   input[type="number"],
-  input[type="date"] {
+  input[type="date"],
+  select {
     width: calc(100% - 20px);
     padding: 10px;
     margin: 10px 0;
@@ -133,7 +145,7 @@ $conn->close();
   }
 
   input[type="submit"] {
-    background-color: #15beed;
+    background-color: #6488ea;
     color: white;
     border: none;
     padding: 10px;
@@ -143,7 +155,7 @@ $conn->close();
   }
 
   input[type="submit"]:hover {
-    background-color: #8a8db0;
+    background-color: lightskyblue;
   }
 
   .message {

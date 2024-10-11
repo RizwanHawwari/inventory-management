@@ -125,6 +125,10 @@ th {
   padding: 15px;
 }
 
+.dashboard-header button {
+  margin-left: auto;
+}
+
 .dashboard-header h2 {
   margin: 0;
   margin-left: 15px;
@@ -187,7 +191,7 @@ th {
   border: none;
   border-radius: 5px;
   text-decoration: none;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   display: flex;
   align-items: center;
 }
@@ -278,6 +282,7 @@ th {
 .form-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .popup-header {
@@ -297,7 +302,9 @@ th {
 }
 
 .popup-form input[type="text"],
-.popup-form input[type="number"] {
+.popup-form input[type="number"],
+.popup-form select,
+.popup-form input[type="date"] {
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
@@ -311,13 +318,14 @@ th {
   font-size: 16px;
   border: none;
   border-radius: 5px;
-  background-color: #4caf50;
+  background-color: #6488ea;
   color: white;
   cursor: pointer;
+  width: 100%;
 }
 
 .popup-form input[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #d6e9c6;
 }
 
 .close {
