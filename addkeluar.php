@@ -8,8 +8,16 @@ if ($conn->connect_error) {
 $message = '';
 
 // Ambil produk yang memiliki produk_masuk lebih dari 0
-$sqlProduk = "SELECT nama_produk FROM produk WHERE produk_masuk > 0";
+$sqlProduk = "SELECT nama_produk, merk FROM produk WHERE produk_masuk > 0";
 $resultProduk = $conn->query($sqlProduk);
+
+// Inisialisasi array produk dan merk
+$products = [];
+if ($resultProduk->num_rows > 0) {
+    while ($rowProduk = $resultProduk->fetch_assoc()) {
+        $products[$rowProduk['nama_produk']][] = $rowProduk['merk'];
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_produk = $_POST['nama_produk'];
@@ -142,7 +150,6 @@ $conn->close();
     text-align: center;
     margin: 10px 0;
     color: red;
-    /* Ganti menjadi merah untuk menandakan kesalahan */
   }
 
   .close-button {
@@ -179,10 +186,8 @@ $conn->close();
       <select name="nama_produk" id="nama_produk" required>
         <option value="">Pilih produk</option>
         <?php
-        if ($resultProduk->num_rows > 0) {
-            while ($rowProduk = $resultProduk->fetch_assoc()) {
-                echo "<option value='" . $rowProduk['nama_produk'] . "'>" . $rowProduk['nama_produk'] . "</option>";
-            }
+        foreach ($products as $nama_produk => $merks) {
+            echo "<option value='" . $nama_produk . "'>" . $nama_produk . "</option>";
         }
         ?>
       </select>
@@ -190,13 +195,6 @@ $conn->close();
       <label for="merek">Merek</label>
       <select name="merek" id="merek" required>
         <option value="">Pilih Merek</option>
-        <?php
-        if ($resultProduk->num_rows > 0) {
-            while ($rowMerk = $resultProduk->fetch_assoc()) {
-                echo "<option value='" . $rowMerk['merk'] . "'>" . $rowMerk['merk'] . "</option>";
-            }
-        }
-        ?>
       </select>
 
       <label for="jumlah">Jumlah</label>
@@ -208,6 +206,29 @@ $conn->close();
       <input type="submit" value="Simpan">
     </form>
   </div>
+
+  <script>
+  // Data produk dan merk dari PHP
+  const products = <?php echo json_encode($products); ?>;
+
+  const namaProdukSelect = document.getElementById('nama_produk');
+  const merkSelect = document.getElementById('merek');
+
+  // Ketika nama produk dipilih, update pilihan merek
+  namaProdukSelect.addEventListener('change', function() {
+    const selectedProduct = this.value;
+    merkSelect.innerHTML = '<option value="">Pilih Merek</option>'; // Reset pilihan merek
+
+    if (selectedProduct && products[selectedProduct]) {
+      products[selectedProduct].forEach(function(merk) {
+        const option = document.createElement('option');
+        option.value = merk;
+        option.textContent = merk;
+        merkSelect.appendChild(option);
+      });
+    }
+  });
+  </script>
 </body>
 
 </html>
