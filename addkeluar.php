@@ -20,60 +20,61 @@ if ($resultProduk->num_rows > 0) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama_produk = $_POST['nama_produk'];
-    $jumlah = $_POST['jumlah'];
-    $tanggal = $_POST['tanggal'];
+  $nama_produk = $_POST['nama_produk'];
+  $merek = $_POST['merek']; // Tambahkan ini
+  $jumlah = $_POST['jumlah'];
+  $tanggal = $_POST['tanggal'];
 
-    // Cek apakah produk sudah terdaftar di produk_masuk
-    $produkCheck = "SELECT * FROM produk WHERE nama_produk = '$nama_produk' AND produk_masuk > 0";
-    $rCheck = $conn->query($produkCheck);
+  // Cek apakah produk sudah terdaftar di produk_masuk
+  $produkCheck = "SELECT * FROM produk WHERE nama_produk = '$nama_produk' AND merk = '$merek' AND produk_masuk > 0"; // Tambahkan cek untuk merek
+  $rCheck = $conn->query($produkCheck);
 
-    if ($rCheck->num_rows > 0) {
-        // Ambil jumlah produk_masuk untuk validasi
-        $sqlJumlahMasuk = "SELECT produk_masuk FROM produk WHERE nama_produk = '$nama_produk'";
-        $resultJumlahMasuk = $conn->query($sqlJumlahMasuk);
-        $rowJumlahMasuk = $resultJumlahMasuk->fetch_assoc();
-        $jumlahMasuk = $rowJumlahMasuk['produk_masuk'];
+  if ($rCheck->num_rows > 0) {
+      // Ambil jumlah produk_masuk untuk validasi
+      $sqlJumlahMasuk = "SELECT produk_masuk FROM produk WHERE nama_produk = '$nama_produk' AND merk = '$merek'"; // Tambahkan cek untuk merek
+      $resultJumlahMasuk = $conn->query($sqlJumlahMasuk);
+      $rowJumlahMasuk = $resultJumlahMasuk->fetch_assoc();
+      $jumlahMasuk = $rowJumlahMasuk['produk_masuk'];
 
-        // Validasi apakah jumlah keluar melebihi jumlah masuk
-        if ($jumlah > $jumlahMasuk) {
-            $message = "Error: Jumlah produk keluar tidak boleh melebihi jumlah produk masuk ($jumlahMasuk).";
-        } else {
-            // Cek apakah produk sudah ada di tabel produk
-            $sqlCheck = "SELECT produk_keluar FROM produk WHERE nama_produk = '$nama_produk'";
-            $resultCheck = $conn->query($sqlCheck);
+      // Validasi apakah jumlah keluar melebihi jumlah masuk
+      if ($jumlah > $jumlahMasuk) {
+          $message = "Error: Jumlah produk keluar tidak boleh melebihi jumlah produk masuk ($jumlahMasuk).";
+      } else {
+          // Cek apakah produk sudah ada di tabel produk untuk merek tertentu
+          $sqlCheck = "SELECT produk_keluar FROM produk WHERE nama_produk = '$nama_produk' AND merk = '$merek'"; // Tambahkan cek untuk merek
+          $resultCheck = $conn->query($sqlCheck);
 
-            if ($resultCheck->num_rows > 0) {
-                // Produk sudah ada, ambil jumlah saat ini
-                $row = $resultCheck->fetch_assoc();
-                $jumlahLama = $row['produk_keluar'];
+          if ($resultCheck->num_rows > 0) {
+              // Produk sudah ada, ambil jumlah saat ini
+              $row = $resultCheck->fetch_assoc();
+              $jumlahLama = $row['produk_keluar'];
 
-                // Hitung jumlah baru
-                $jumlahBaru = $jumlahLama + $jumlah;
+              // Hitung jumlah baru
+              $jumlahBaru = $jumlahLama + $jumlah;
 
-                // Update jumlah produk
-                $sqlUpdate = "UPDATE produk SET produk_keluar = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk'";
-                
-                if ($conn->query($sqlUpdate) === TRUE) {
-                    $message = "Jumlah produk keluar berhasil diperbarui menjadi $jumlahBaru!";
-                } else {
-                    $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
-                }
-            } else {
-                // Produk belum ada, insert produk baru ke tabel produk
-                $sqlInsert = "INSERT INTO produk (nama_produk, produk_keluar, tanggal) VALUES ('$nama_produk', '$jumlah', '$tanggal')";
+              // Update jumlah produk untuk merek tertentu
+              $sqlUpdate = "UPDATE produk SET produk_keluar = $jumlahBaru, tanggal = '$tanggal' WHERE nama_produk = '$nama_produk' AND merk = '$merek'"; // Tambahkan cek untuk merek
 
-                if ($conn->query($sqlInsert) === TRUE) {
-                    $message = "Produk berhasil ditambahkan!";
-                } else {
-                    $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
-                }
-            }
-        }
-    } else {
-        // Jika produk tidak terdaftar di produk_masuk
-        $message = "Penambahan produk keluar gagal! Produk '$nama_produk' belum terdaftar di produk masuk.";
-    }
+              if ($conn->query($sqlUpdate) === TRUE) {
+                  $message = "Jumlah produk keluar berhasil diperbarui menjadi $jumlahBaru!";
+              } else {
+                  $message = "Error: " . $sqlUpdate . "<br>" . $conn->error;
+              }
+          } else {
+              // Produk belum ada, insert produk baru ke tabel produk untuk merek tertentu
+              $sqlInsert = "INSERT INTO produk (nama_produk, merk, produk_keluar, tanggal) VALUES ('$nama_produk', '$merek', '$jumlah', '$tanggal')"; // Tambahkan merek
+
+              if ($conn->query($sqlInsert) === TRUE) {
+                  $message = "Produk berhasil ditambahkan!";
+              } else {
+                  $message = "Error: " . $sqlInsert . "<br>" . $conn->error;
+              }
+          }
+      }
+  } else {
+      // Jika produk tidak terdaftar di produk_masuk
+      $message = "Penambahan produk keluar gagal! Produk '$nama_produk' dengan merek '$merek' belum terdaftar di produk masuk.";
+  }
 }
 
 $conn->close();
