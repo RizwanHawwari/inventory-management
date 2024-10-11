@@ -31,7 +31,7 @@ CREATE TABLE `produk` (
   `jumlah` int(11) DEFAULT 0,
   `tanggal` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `produk` (
 
 LOCK TABLES `produk` WRITE;
 /*!40000 ALTER TABLE `produk` DISABLE KEYS */;
-INSERT INTO `produk` VALUES (2,'Teh Kotak','Indofood',698,133,698,'2024-10-06'),(6,'Lays','Good',783,24,783,'2024-10-06'),(16,'Indomie Soto','Indomie',800,0,800,'2024-10-06');
+INSERT INTO `produk` VALUES (22,'Air Mineral','Le Mineral',45,32,45,'2024-10-11'),(25,'Air Mineral','Crystaline',56,10,56,'2024-10-11'),(26,'Air Mineral','Oasis',59,10,59,'2024-10-11'),(27,'Makanan','Potato Chip',100,0,100,'2024-10-11'),(28,'Makanan','Roma Kelapa',50,0,50,'2024-10-11');
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 15:36:27
+-- Dump completed on 2024-10-11 23:09:25
