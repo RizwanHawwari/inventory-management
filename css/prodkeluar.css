@@ -161,10 +161,13 @@ th {
     padding: 20px 0;
     height: calc(100vh - 150px);
   }
-  th,
   td {
     padding: 20px 10px;
-    font-size: 12px;
+    font-size: 10px;
+  }
+  th {
+    padding: 20px 10px;
+    font-size: 8px;
   }
   .sidebar {
     width: 60px;

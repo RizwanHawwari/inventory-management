@@ -17,9 +17,8 @@ $offset = ($page - 1) * $limit;
 $totalResult = mysqli_query($conn, "SELECT COUNT(*) as total FROM produk WHERE nama_produk LIKE '%$search%'");
 $totalData = mysqli_fetch_assoc($totalResult)['total'];
 
-$sql = "SELECT id, nama_produk, merk, produk_masuk, jumlah, tanggal 
-        FROM produk 
-        WHERE nama_produk LIKE '%$search%' 
+$sql = "SELECT id, nama_produk, merk, produk_masuk, tanggal, penerima_barang, waktu FROM produk WHERE
+        nama_produk LIKE '%$search%' 
         LIMIT $limit OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
@@ -28,15 +27,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $nama_produk = mysqli_real_escape_string($conn, $_POST['nama_produk']);
   $merk = mysqli_real_escape_string($conn, $_POST['merk']);
   $produk_masuk = mysqli_real_escape_string($conn, $_POST['produk_masuk']);
+  $penerima_barang = mysqli_real_escape_string($conn, $_POST['penerima_barang']);
+  $waktu = mysqli_real_escape_string($conn, $_POST['waktu']);
 
-  $sql = "UPDATE produk SET nama_produk='$nama_produk', merk='$merk', produk_masuk='$produk_masuk', tanggal=NOW() WHERE id='$id'";
+  $sql = "UPDATE produk 
+          SET nama_produk='$nama_produk', 
+              merk='$merk', 
+              produk_masuk='$produk_masuk', 
+              penerima_barang='$penerima_barang', 
+              waktu='$waktu', 
+              tanggal=NOW() 
+          WHERE id='$id'";
+
   if (mysqli_query($conn, $sql)) {
-    header("Location: produk_masuk.php?message=Data berhasil diperbarui&search=" . urlencode($search));
-    exit;
-} else {
-    die("Update failed: " . mysqli_error($conn));
+      header("Location: produk_masuk.php?message=Data berhasil diperbarui&search=" . urlencode($search));
+      exit;
+  } else {
+      die("Update failed: " . mysqli_error($conn));
+  }
 }
-}
+
 
 if (!$result) {
     die("Query failed: " . mysqli_error($conn));
@@ -50,7 +60,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Masuk</title>
-  <link rel="stylesheet" href="css/produkmasuk.css">
+  <link rel="stylesheet" href="css/prodmasuk.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -111,6 +121,7 @@ if (!$result) {
           <th>Nama Produk</th>
           <th>Merk</th>
           <th>Produk Masuk</th>
+          <th>Penerima</th>
           <th>Terakhir Diubah</th>
           <th>Edit</th>
         </tr>
@@ -118,29 +129,40 @@ if (!$result) {
       <tbody>
         <?php
         if (mysqli_num_rows($result) > 0) {
-          $i = 1;
+            $i = 1;
             while ($row = mysqli_fetch_assoc($result)) {
+                // Format tanggal dan waktu
+                $tanggal = $row['tanggal'];
+                $waktu = $row['waktu'];
+                $datetimeString = $tanggal . ' ' . $waktu;
+                $dateTime = new DateTime($datetimeString);
+                $formattedDate = $dateTime->format('d F Y, H:i:s');
+
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($i) . "</td>";
-                echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
-                echo "<td>" . htmlspecialchars($row["merk"]) . "</td>";
-                echo "<td>" . htmlspecialchars($row["produk_masuk"]) . "</td>";
-                echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
-                echo "<td>
-                <a href='javascript:void(0);' class='edit-icon' 
-                   onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", " . htmlspecialchars($row['produk_masuk']) . ")'>
-                    <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
-                </a>
-            </td>";
+                echo "<td data-label='ID'>" . htmlspecialchars($i) . "</td>";
+                echo "<td data-label='Nama Produk'>" . htmlspecialchars($row["nama_produk"]) . "</td>";
+                echo "<td data-label='Merk'>" . htmlspecialchars($row["merk"]) . "</td>";
+                echo "<td data-label='Produk Masuk'>" . htmlspecialchars($row["produk_masuk"]) . "</td>";
+                echo "<td data-label='Penerima'>" . htmlspecialchars($row["penerima_barang"]) . "</td>";
+                echo "<td data-label='Terakhir Diubah'>" . htmlspecialchars($formattedDate) . "</td>";
+                echo "<td data-label='Edit'>
+                        <a href='javascript:void(0);' class='edit-icon' 
+                           onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", " . htmlspecialchars($row['produk_masuk']) . ")'>
+                            <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
+                        </a>
+                      </td>";
                 $i++;
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='6'>Tidak ada data yang ditemukan untuk '<strong>" . htmlspecialchars($search) . "</strong>'</td></tr>";
+            echo "<tr><td colspan='7'>Tidak ada data yang ditemukan untuk '<strong>" . htmlspecialchars($search) . "</strong>'</td></tr>";
         }
         ?>
       </tbody>
     </table>
+
+
+
 
     <div class="pagination">
       <?php
@@ -175,12 +197,21 @@ if (!$result) {
       <hr>
       <form id="form-produk" method="POST" action="" autocomplete="off">
         <input type="hidden" name="id" id="product-id">
+
         <label for="nama_produk">Nama Produk:</label>
         <input type="text" name="nama_produk" id="nama_produk" required>
+
         <label for="merk">Merk:</label>
         <input type="text" name="merk" id="merk" required>
+
         <label for="produk_masuk">Jumlah:</label>
         <input type="number" name="produk_masuk" id="produk_masuk" required>
+
+        <label for="penerima_barang">Penerima Barang:</label>
+        <input type="text" name="penerima_barang" id="penerima_barang" required>
+
+        <label for="waktu">Jam:</label>
+        <input type="time" name="waktu" id="waktu" required>
 
         <div class="form-buttons">
           <input type="submit" value="Simpan" style="background-color: #6488ea;">
@@ -188,6 +219,7 @@ if (!$result) {
             Produk</button>
         </div>
       </form>
+
 
     </div>
   </div>

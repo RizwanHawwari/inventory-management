@@ -14,15 +14,27 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['searc
 
 // Jika form update dikirim
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Mengambil dan mengamankan input
   $id = mysqli_real_escape_string($conn, $_POST['id']);
   $nama_produk = mysqli_real_escape_string($conn, $_POST['nama_produk']);
   $merk = mysqli_real_escape_string($conn, $_POST['merk']);
   $produk_keluar = mysqli_real_escape_string($conn, $_POST['produk_keluar']);
+  $penerima_barang = mysqli_real_escape_string($conn, $_POST['penerima_barang']);
+  $alasan_keluar = mysqli_real_escape_string($conn, $_POST['alasan_keluar']);
+  $jam = mysqli_real_escape_string($conn, $_POST['jam']); // Waktu keluar
 
-  $sql = "UPDATE produk SET nama_produk='$nama_produk', merk='$merk', produk_keluar='$produk_keluar', tanggal=NOW() WHERE id='$id'";
-  
+  // Mengupdate data produk
+  $sql = "UPDATE produk SET 
+              nama_produk='$nama_produk', 
+              merk='$merk', 
+              produk_keluar='$produk_keluar',
+              penerima_barang_keluar='$penerima_barang',
+              alasan_keluar='$alasan_keluar',
+              waktu='$jam'
+          WHERE id='$id'";
+
   if (mysqli_query($conn, $sql)) {
-      header("Location: produk_keluar.php?message=Data berhasil diperbarui&search=" . urlencode($search));
+      header("Location: produk_keluar.php?message=Data berhasil diperbarui");
       exit;
   } else {
       die("Update failed: " . mysqli_error($conn));
@@ -40,7 +52,7 @@ $totalPages = ceil($totalData / $limit);
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
-$sql = "SELECT id, nama_produk, merk, produk_keluar AS jumlah, tanggal 
+$sql = "SELECT id, nama_produk, merk, produk_keluar AS jumlah, tanggal, penerima_barang_keluar, alasan_keluar, waktu
         FROM produk 
         WHERE nama_produk LIKE '%$search%' 
         LIMIT $start, $limit";
@@ -58,7 +70,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produk Keluar</title>
-  <link rel="stylesheet" href="css/produkkeluar.css">
+  <link rel="stylesheet" href="css/prodkeluar.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -119,34 +131,46 @@ if (!$result) {
           <th>Nama Produk</th>
           <th>Merek</th>
           <th>Jumlah</th>
+          <th>Penerima</th>
           <th>Tanggal</th>
+          <th>Alasan Keluar</th> <!-- Tambahkan kolom Alasan Keluar -->
           <th>Edit</th>
         </tr>
       </thead>
       <tbody>
         <?php
-  if (mysqli_num_rows($result) > 0) {
-    $i = $start + 1; // Penomoran sesuai halaman
-    while ($row = mysqli_fetch_assoc($result)) {
-      echo "<tr>";
-      echo "<td>" . $i . "</td>";
-      echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
-      echo "<td>" . htmlspecialchars($row["merk"]) . "</td>"; // Menampilkan Merek
-      echo "<td>" . htmlspecialchars($row["jumlah"]) . "</td>";
-      echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
-      echo "<td>
-              <a href='javascript:void(0);' class='edit-icon' 
-                 onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", \"" . htmlspecialchars($row['jumlah']) . "\", \"" . htmlspecialchars($row['tanggal']) . "\")'>
-                  <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
-              </a>
-            </td>";
-      $i++;
-      echo "</tr>";
-    }
-  } else {
-    echo "<tr><td colspan='6'>Tidak ada data</td></tr>";
-  }
-  ?>
+        if (mysqli_num_rows($result) > 0) {
+            $i = $start + 1; // Penomoran sesuai halaman
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td>" . $i . "</td>";
+                echo "<td>" . htmlspecialchars($row["nama_produk"]) . "</td>";
+                echo "<td>" . htmlspecialchars($row["merk"]) . "</td>";
+                echo "<td>" . htmlspecialchars($row["jumlah"]) . "</td>";
+                echo "<td>" . htmlspecialchars($row["penerima_barang_keluar"]) . "</td>";
+
+                $tanggal = $row['tanggal'];
+                $waktu = $row['waktu'];
+                $datetimeString = $tanggal . ' ' . $waktu;
+                $dateTime = new DateTime($datetimeString);
+                $formattedDate = $dateTime->format('d F Y, H:i:s');
+                echo "<td>" . htmlspecialchars($formattedDate) . "</td>";
+
+                echo "<td>" . htmlspecialchars($row["alasan_keluar"]) . "</td>";
+                
+                echo "<td>
+                        <a href='javascript:void(0);' class='edit-icon' 
+                           onclick='openPopup(" . htmlspecialchars($row['id']) . ", \"" . htmlspecialchars($row['nama_produk']) . "\", \"" . htmlspecialchars($row['merk']) . "\", \"" . htmlspecialchars($row['jumlah']) . "\", \"" . htmlspecialchars($row['tanggal']) . "\")'>
+                            <i class='fas fa-edit' style='color:black; font-size: 1.5em;'></i>
+                        </a>
+                      </td>";
+                $i++;
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='8'>Tidak ada data</td></tr>"; // Ganti colspan sesuai jumlah kolom
+        }
+        ?>
       </tbody>
     </table>
 
@@ -179,14 +203,31 @@ if (!$result) {
       <hr>
       <form id="form-produk" method="POST" action="">
         <input type="hidden" name="id" id="product-id">
+
         <label for="nama_produk">Nama Produk:</label>
         <input type="text" name="nama_produk" id="nama_produk" required>
+
         <label for="merk">Merek:</label>
         <input type="text" name="merk" id="merk" required>
+
         <label for="produk_keluar">Jumlah:</label>
         <input type="number" name="produk_keluar" id="produk_keluar" required>
+
+        <label for="penerima_barang">Penerima:</label>
+        <input type="text" name="penerima_barang" id="penerima_barang" required>
+
+        <label for="alasan_keluar">Alasan Keluar</label>
+        <select name="alasan_keluar" id="alasan_keluar" required>
+          <option value="Terjual">Terjual</option>
+          <option value="Expired">Expired</option>
+        </select>
+
+        <label for="jam">Waktu:</label>
+        <input type="time" name="jam" id="jam" required>
+
         <input type="submit" value="Simpan">
       </form>
+
     </div>
   </div>
 

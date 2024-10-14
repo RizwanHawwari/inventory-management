@@ -7,3 +7,5 @@ Produk: ada - Stok diperbarui, produk masuk baru: 30 pada tanggal: 2024-10-11Pro
 Produk: Air Mineral - Stok ditambahkan, jumlah: 59 pada tanggal: 2024-10-11
 Produk: Makanan - Stok ditambahkan, jumlah: 100 pada tanggal: 2024-10-11
 Produk: Makanan - Stok ditambahkan, jumlah: 50 pada tanggal: 2024-10-11
+Produk: Air Mineral - Stok ditambahkan, jumlah: 69, penerima: Ikhsan Lemon pada: 2024-10-14 16:37
+Produk: Makanan - Stok ditambahkan, jumlah: 66, penerima: Bernado Maulana pada: 2024-10-14 17:44Produk: Xx - Stok ditambahkan, jumlah: 12, penerima: adas pada: 2024-10-14 17:48Produk: Air Mineral - Stok diperbarui, jumlah baru: 79, penerima: Katakuri pada: 2024-10-14 16:50Produk: Air Mineral - Stok diperbarui, jumlah baru: 102, penerima: Adafa pada: 2024-10-14 21:53Produk: Air Mineral - Stok diperbarui, jumlah baru: 117, penerima: Endang pada: 2024-10-14 16:57

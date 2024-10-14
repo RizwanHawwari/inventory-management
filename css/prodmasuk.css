@@ -150,10 +150,13 @@ th {
 }
 
 @media (max-width: 768px) {
-  th,
   td {
     padding: 20px 10px;
-    font-size: 12px;
+    font-size: 10px;
+  }
+  th {
+    padding: 20px 10px;
+    font-size: 8px;
   }
   .dashboard-header h2 {
     font-size: 15px;

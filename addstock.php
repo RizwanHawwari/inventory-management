@@ -16,49 +16,58 @@ if ($conn->connect_error) {
 $message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama_produk = $_POST['nama_produk'];
-    $merk = $_POST['merk'];
-    $jumlah = $_POST['jumlah'];
-    $tanggal = $_POST['tanggal'];
+  $nama_produk = $_POST['nama_produk'];
+  $merk = $_POST['merk'];
+  $jumlah = $_POST['jumlah'];
+  $tanggal = $_POST['tanggal'];  // Tanggal tanpa jam
+  $jam = $_POST['jam'];  // Jam terpisah
+  $penerima_barang = $_POST['penerima_barang'];
 
-    // Cek apakah produk sudah ada di tabel produk
-    $sqlCheckProduk = "SELECT jumlah, produk_masuk, merk, tanggal FROM produk WHERE merk = '$merk'";
-    $resultCheckProduk = $conn->query($sqlCheckProduk);
+  // Cek apakah produk sudah ada di tabel produk
+  $sqlCheckProduk = "SELECT produk_masuk FROM produk WHERE merk = '$merk'";
+  $resultCheckProduk = $conn->query($sqlCheckProduk);
 
-    // Update atau insert ke tabel produk
-    if ($resultCheckProduk->num_rows > 0) {
-        // Produk sudah ada, update jumlah dan tanggal
-        $rowProduk = $resultCheckProduk->fetch_assoc();
-        $jumlahProdukLama = $rowProduk['jumlah'];
-        $produkMasukLama = $rowProduk['produk_masuk'];
+  if ($resultCheckProduk->num_rows > 0) {
+      // Produk sudah ada, update jumlah, penerima_barang, tanggal, dan waktu
+      $rowProduk = $resultCheckProduk->fetch_assoc();
+      $jumlahProdukLama = $rowProduk['produk_masuk'];
+      
+      // Hitung jumlah baru
+      $jumlahBaru = $jumlahProdukLama + $jumlah;
+      
+// Gabungkan tanggal dan jam
+$waktu = $tanggal . ' ' . $jam;
 
-        // Hitung produk_masuk baru
-        $produkMasukBaru = $produkMasukLama + $jumlah;
-
-        $sqlUpdateProduk = "UPDATE produk SET produk_masuk = $produkMasukBaru, tanggal = '$tanggal' WHERE merk = '$merk'";
-        if ($conn->query($sqlUpdateProduk) === TRUE) {
-            $message = "Jumlah stok produk berhasil diperbarui!";
-            error_log("Produk: $nama_produk - Stok diperbarui, produk masuk baru: $produkMasukBaru pada tanggal: $tanggal", 3, "log.txt"); // Log to file
-        } else {
-            $message = "Error: " . $sqlUpdateProduk . "<br>" . $conn->error;
-            error_log("Error memperbarui stok produk: $nama_produk. SQL Error: " . $conn->error, 3, "log.txt");
-        }
-    } else {
-        // Produk belum ada, insert produk baru
-        $sqlInsertProduk = "INSERT INTO produk (nama_produk, merk, jumlah, produk_masuk, tanggal) VALUES ('$nama_produk', '$merk', '$jumlah', '$jumlah', '$tanggal')";
-        if ($conn->query($sqlInsertProduk) === TRUE) {
-            $message = "Stok produk berhasil ditambahkan!";
-            error_log("Produk: $nama_produk - Stok ditambahkan, jumlah: $jumlah pada tanggal: $tanggal\n", 3, "log.txt"); // Log to file
-        } else {
-            $message = "Error: " . $sqlInsertProduk . "<br>" . $conn->error;
-            error_log("Error menambahkan produk baru: $nama_produk. SQL Error: " . $conn->error, 3, "log.txt");
-        }
-    }
+$sqlUpdateProduk = "UPDATE produk 
+                    SET produk_masuk = $jumlahBaru, 
+                        penerima_barang = '$penerima_barang', 
+                        tanggal = '$tanggal', 
+                        waktu = '$waktu' 
+                    WHERE merk = '$merk'";
+      if ($conn->query($sqlUpdateProduk) === TRUE) {
+          $message = "Jumlah stok produk berhasil diperbarui!";
+          error_log("Produk: $nama_produk - Stok diperbarui, jumlah baru: $jumlahBaru, penerima: $penerima_barang pada: $tanggal $jam", 3, "log.txt");
+      } else {
+          $message = "Error: " . $sqlUpdateProduk . "<br>" . $conn->error;
+          error_log("Error memperbarui stok produk: $nama_produk. SQL Error: " . $conn->error, 3, "log.txt");
+      }
+  } else {
+      // Produk belum ada, insert produk baru
+      $sqlInsertProduk = "INSERT INTO produk (nama_produk, merk, jumlah, produk_masuk, tanggal, waktu, penerima_barang) 
+                          VALUES ('$nama_produk', '$merk', '$jumlah', '$jumlah', '$tanggal', '$jam', '$penerima_barang')";
+      if ($conn->query($sqlInsertProduk) === TRUE) {
+          $message = "Stok produk berhasil ditambahkan!";
+          error_log("Produk: $nama_produk - Stok ditambahkan, jumlah: $jumlah, penerima: $penerima_barang pada: $tanggal $jam", 3, "log.txt");
+      } else {
+          $message = "Error: " . $sqlInsertProduk . "<br>" . $conn->error;
+          error_log("Error menambahkan produk baru: $nama_produk. SQL Error: " . $conn->error, 3, "log.txt");
+      }
+  }
 }
+
 
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +125,8 @@ $conn->close();
 
   input[type="text"],
   input[type="number"],
-  input[type="date"] {
+  input[type="date"],
+  input[type="time"] {
     width: calc(100% - 20px);
     padding: 10px;
     margin: 10px 0;
@@ -183,8 +193,14 @@ $conn->close();
       <label for="jumlah">Jumlah</label>
       <input type="number" name="jumlah" id="jumlah" placeholder="Tambahkan jumlah" required>
 
+      <label for="penerima_barang">Penerima Barang</label>
+      <input type="text" name="penerima_barang" id="penerima_barang" placeholder="Nama penerima barang" required>
+
       <label for="tanggal">Tanggal</label>
       <input type="date" name="tanggal" id="tanggal" required>
+
+      <label for="jam">Jam</label>
+      <input type="time" name="jam" id="jam" required>
 
       <input type="submit" value="Simpan">
     </form>
