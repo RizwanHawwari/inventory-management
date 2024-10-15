@@ -24,22 +24,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $jam = mysqli_real_escape_string($conn, $_POST['jam']); // Waktu keluar
 
   // Mengupdate data produk
-  $sql = "UPDATE produk SET 
-              nama_produk='$nama_produk', 
-              merk='$merk', 
-              produk_keluar='$produk_keluar',
-              penerima_barang_keluar='$penerima_barang',
-              alasan_keluar='$alasan_keluar',
-              waktu='$jam'
-          WHERE id='$id'";
+  $sql_update = "UPDATE produk SET 
+                     nama_produk='$nama_produk', 
+                     merk='$merk', 
+                     produk_keluar='$produk_keluar',
+                     penerima_barang_keluar='$penerima_barang',
+                     alasan_keluar='$alasan_keluar',
+                     waktu='$jam'
+                 WHERE id='$id'";
 
-  if (mysqli_query($conn, $sql)) {
-      header("Location: produk_keluar.php?message=Data berhasil diperbarui");
-      exit;
+  if (mysqli_query($conn, $sql_update)) {
+    $perubahan = $produk_keluar;
+    $jenis_perubahan = 'Keluar: Update' . " " . $alasan_keluar;
+
+    $sqlRiwayat = "INSERT INTO riwayat_perubahan (id_produk, nama_produk, merk, perubahan, penerima_barang, jenis_perubahan) VALUES (
+        (SELECT id FROM produk WHERE nama_produk = '$nama_produk' AND merk = '$merk'),
+        '$nama_produk', '$merk', $perubahan, '$penerima_barang', '$jenis_perubahan'
+    )";
+
+      if (mysqli_query($conn, $sqlRiwayat)) {
+          header("Location: produk_keluar.php?message=Data berhasil diperbarui dan dicatat di riwayat");
+          exit;
+      } else {
+          die("Failed to insert into riwayat_perubahan: " . mysqli_error($conn));
+      }
   } else {
       die("Update failed: " . mysqli_error($conn));
   }
 }
+
 
 $limit = 5;
 

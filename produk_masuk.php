@@ -40,8 +40,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           WHERE id='$id'";
 
   if (mysqli_query($conn, $sql)) {
-      header("Location: produk_masuk.php?message=Data berhasil diperbarui&search=" . urlencode($search));
-      exit;
+    $perubahan = $produk_masuk;
+    $jenis_perubahan = 'Masuk: Update';
+
+    $sqlRiwayat = "INSERT INTO riwayat_perubahan (id_produk, nama_produk, merk, perubahan, penerima_barang, jenis_perubahan) VALUES (
+        (SELECT id FROM produk WHERE nama_produk = '$nama_produk' AND merk = '$merk'),
+        '$nama_produk', '$merk', $perubahan, '$penerima_barang', '$jenis_perubahan')";
+
+if (mysqli_query($conn, $sqlRiwayat)) {
+  header("Location: produk_keluar.php?message=Data berhasil diperbarui dan dicatat di riwayat");
+  exit;
+} else {
+  die("Failed to insert into riwayat_perubahan: " . mysqli_error($conn));
+}
   } else {
       die("Update failed: " . mysqli_error($conn));
   }
