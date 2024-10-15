@@ -305,7 +305,8 @@ th {
 }
 
 .popup-form input[type="text"],
-.popup-form input[type="number"] {
+.popup-form input[type="number"],
+.popup-form input[type="time"] {
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 15px;

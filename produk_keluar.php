@@ -112,6 +112,10 @@ if (!$result) {
       <i class="fas fa-tags"></i>
       <span>Produk Keluar</span>
     </a>
+    <a href="riwayat.php">
+      <i class="fas fa-history"></i>
+      <span>Riwayat Perubahan</span>
+    </a>
     <a href="logout.php">
       <i class="fas fa-sign-out-alt"></i>
       <span>Keluar</span>
@@ -216,13 +220,13 @@ if (!$result) {
         <label for="penerima_barang">Penerima:</label>
         <input type="text" name="penerima_barang" id="penerima_barang" required>
 
-        <label for="alasan_keluar">Alasan Keluar</label>
+        <label for="alasan_keluar">Alasan Keluar:</label>
         <select name="alasan_keluar" id="alasan_keluar" required>
           <option value="Terjual">Terjual</option>
           <option value="Expired">Expired</option>
         </select>
 
-        <label for="jam">Waktu:</label>
+        <label for="jam">Jam:</label>
         <input type="time" name="jam" id="jam" required>
 
         <input type="submit" value="Simpan">

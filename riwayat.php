@@ -10,9 +10,9 @@ if (!isset($_SESSION["login"])) {
 include 'db.php';
 
 // Inisialisasi variabel pagination
-$limit = 5; // Jumlah data per halaman
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Halaman saat ini
-$offset = ($page - 1) * $limit; // Hitung offset
+$limit = 5;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
+$offset = ($page - 1) * $limit;
 
 $search = "";
 if (isset($_GET['search'])) {
@@ -20,9 +20,9 @@ if (isset($_GET['search'])) {
 }
 
 // Hitung total data untuk pagination
-$sql_count = "SELECT COUNT(*) as total FROM produk";
+$sql_count = "SELECT COUNT(*) as total FROM riwayat_perubahan rp JOIN produk p ON rp.nama_produk = p.nama_produk AND rp.merk = p.merk";
 if (!empty($search)) {
-    $sql_count .= " WHERE nama_produk LIKE '%$search%'";
+    $sql_count .= " WHERE rp.nama_produk LIKE '%$search%'"; // Ganti nama_produk untuk pencarian
 }
 
 $result_count = mysqli_query($conn, $sql_count);
@@ -30,15 +30,17 @@ $row_count = mysqli_fetch_assoc($result_count);
 $total_rows = $row_count['total'];
 $total_pages = ceil($total_rows / $limit); // Total halaman
 
-// Query untuk mengambil data produk dengan pagination
-$sql = "SELECT id, nama_produk, merk, produk_masuk, produk_keluar, (produk_masuk - produk_keluar) AS total 
-        FROM produk";
+// Query untuk mengambil data dari tabel riwayat_perubahan dengan pagination
+$sql = "SELECT rp.id, rp.nama_produk, rp.merk, rp.perubahan, rp.penerima_barang, rp.jenis_perubahan, rp.waktu_perubahan, p.alasan_keluar 
+        FROM riwayat_perubahan rp 
+        JOIN produk p ON rp.nama_produk = p.nama_produk AND rp.merk = p.merk";
 
 if (!empty($search)) {
-    $sql .= " WHERE nama_produk LIKE '%$search%'";
+    $sql .= " WHERE rp.nama_produk LIKE '%$search%'"; // Ganti nama_produk untuk pencarian
 }
 
-$sql .= " LIMIT $limit OFFSET $offset"; // Tambahkan LIMIT dan OFFSET untuk pagination
+$sql .= " LIMIT $limit OFFSET $offset";
+
 
 $result = mysqli_query($conn, $sql);
 
@@ -54,7 +56,7 @@ if (!$result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Stok Produk</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/riwayat.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -66,7 +68,7 @@ if (!$result) {
       <i class="fas fa-bars" id="hamburger-icon"></i>
     </div>
 
-    <h2>DASHBOARD</h2>
+    <h2>RIWAYAT PERUBAHAN</h2>
 
     <div class="search-container">
       <form action="" method="GET" autocomplete="off">
@@ -101,35 +103,48 @@ if (!$result) {
     </a>
   </div>
 
+
+
   <div class="content-wrapper">
+    <?php if (isset($_GET['message'])): ?>
+    <div class="alert alert-success">
+      <?= htmlspecialchars($_GET['message']); ?>
+    </div>
+    <?php endif; ?>
     <table>
       <thead>
         <tr>
           <th>ID</th>
           <th>Nama Produk</th>
-          <th>Produk Masuk</th>
-          <th>Produk Keluar</th>
-          <th>Total</th>
+          <th>Merk</th>
+          <th>Perubahan</th>
+          <th>Penerima Barang</th>
+          <th>Jenis Perubahan</th>
+          <th>Waktu Perubahan</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
         <?php
-                if (mysqli_num_rows($result) > 0) {
-                  $i = $offset + 1; // Untuk mengurutkan ID di tiap halaman
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        echo "<tr>";
-                        echo "<td>" . $i . "</td>";
-                        echo "<td>" . $row["merk"] . "</td>";
-                        echo "<td>" . $row["produk_masuk"] . "</td>";
-                        echo "<td>" . $row["produk_keluar"] . "</td>";
-                        echo "<td>" . $row["total"] . "</td>";
-                        $i++;
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='5'>Tidak ada data</td></tr>";
-                }
-                ?>
+  if (mysqli_num_rows($result) > 0) {
+    $i = $offset + 1;
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $i . "</td>";
+        echo "<td>" . $row["nama_produk"] . "</td>";
+        echo "<td>" . $row["merk"] . "</td>";
+        echo "<td>" . $row["perubahan"] . "</td>";
+        echo "<td>" . $row["penerima_barang"] . "</td>";
+        echo "<td>" . $row["jenis_perubahan"] . "</td>";
+        echo "<td>" . $row["waktu_perubahan"] . "</td>";
+        echo "<td><a href='delete.php?id=" . $row["id"] . "' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?');\">Hapus</a></td>";
+        $i++;
+        echo "</tr>";
+    }
+  } else {
+      echo "<tr><td colspan='8'>Tidak ada data riwayat</td></tr>";
+  }
+  ?>
       </tbody>
     </table>
 

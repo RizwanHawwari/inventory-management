@@ -6,7 +6,7 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-color: #fff;
+  background-color: #8187b8;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -77,8 +77,8 @@ body {
   background-color: white;
   padding: 20px;
   /* border-radius: 8px; */
-  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
-  min-height: 100vh;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-height: 100vh; /* Menjadikan konten setinggi layar */
   overflow: hidden;
 }
 
@@ -125,13 +125,9 @@ th {
   padding: 15px;
 }
 
-.dashboard-header button {
-  margin-left: auto;
-}
-
 .dashboard-header h2 {
   margin: 0;
-  margin-left: 15px;
+  margin-left: 15px; /* Jarak antara tombol hamburger dan judul */
 }
 
 .hamburger {
@@ -141,6 +137,7 @@ th {
 
 .search-container {
   display: flex;
+  margin-left: auto;
 }
 
 .search-container form {
@@ -155,19 +152,19 @@ th {
 
 @media (max-width: 768px) {
   .dashboard-header h2 {
-    font-size: 18px;
-  }
-  .content-wrapper {
-    padding: 20px 0;
-    height: calc(100vh - 150px);
-  }
-  td {
-    padding: 20px 10px;
-    font-size: 9px;
+    font-size: 15px;
   }
   th {
-    padding: 20px 10px;
-    font-size: 6px;
+    padding: 15px 10px;
+    font-size: 8px;
+  }
+  td {
+    padding: 15px 10px;
+    font-size: 10px;
+  }
+  .content-wrapper {
+    padding: 20px 0px;
+    height: calc(100vh - 150px);
   }
   .sidebar {
     width: 60px;
@@ -178,10 +175,6 @@ th {
 }
 
 /* add stock */
-.addstock-container {
-  margin-left: auto;
-}
-
 .add-stock {
   cursor: pointer;
   margin-left: 10px;
@@ -194,7 +187,7 @@ th {
   border: none;
   border-radius: 5px;
   text-decoration: none;
-  /* margin-left: 10px; */
+  margin-left: 10px;
   display: flex;
   align-items: center;
 }
@@ -202,6 +195,12 @@ th {
 .add-stock:hover {
   background-color: #8c99b4;
 }
+
+/* .add-stock {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+} */
 
 .plus-icon {
   border-radius: 8px;
@@ -217,16 +216,21 @@ th {
 
 .search-bar {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  margin-right: 20px;
+  align-items: center; /* Vertikal alignment */
+  margin-left: auto; /* Memindahkan search bar ke kanan */
 }
 
 .search-input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-left: 10px; /* Jarak antara tombol dan search bar */
 }
+
+.search-button {
+  display: none; /* Menyembunyikan button karena kita menggunakan input type text */
+}
+
 /* pagination style */
 .pagination {
   margin: 20px 0;
@@ -252,97 +256,34 @@ th {
   color: white;
 }
 
-/* edit icon */
-.edit-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #111;
-  font-size: 1.5em;
-  text-decoration: none;
-  opacity: 0.8;
-}
-
-.edit-icon i {
-  margin: 0;
-}
-
-/* popup form */
-.popup-form {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  z-index: 1000;
-  width: 400px;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.popup-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.popup-header i {
-  font-size: 18px;
-  margin-right: 10px;
-}
-
-.popup-form label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.popup-form input[type="text"],
-.popup-form input[type="number"],
-.popup-form select,
-.popup-form input[type="date"],
-.popup-form input[type="time"] {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.popup-form input[type="submit"] {
-  padding: 10px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #6488ea;
-  color: white;
-  cursor: pointer;
-  width: 100%;
-}
-
-.popup-form input[type="submit"]:hover {
-  background-color: #d6e9c6;
-}
-
-.close {
-  cursor: pointer;
-  font-size: 20px;
-  float: right;
-}
-
-.message {
-  background-color: #dff0d8;
-  color: #3c763d;
+.alert {
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #d6e9c6;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.alert-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+  border: 1px solid #d6e9c6;
+}
+
+.alert-error {
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px solid #ebccd1;
+}
+
+.alert-warning {
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+  border: 1px solid #faebcc;
+}
+
+.alert-info {
+  background-color: #d9edf7;
+  color: #31708f;
+  border: 1px solid #bce8f1;
 }

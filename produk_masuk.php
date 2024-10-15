@@ -102,6 +102,10 @@ if (!$result) {
       <i class="fas fa-tags"></i>
       <span>Produk Keluar</span>
     </a>
+    <a href="riwayat.php">
+      <i class="fas fa-history"></i>
+      <span>Riwayat Perubahan</span>
+    </a>
     <a href="logout.php">
       <i class="fas fa-sign-out-alt"></i>
       <span>Keluar</span>
