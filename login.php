@@ -59,7 +59,7 @@ if ( isset($_POST["submit"]) ) {
 <body>
   <div class="header-logos">
     <div class="logo-cn">
-      <img src="img/logo-cn.png" alt="logo-cn">
+      <img src="img/logocn.png" alt="logo-cn">
     </div>
     <div class="logo-rpl">
       <img src="img/logo-rpl.png" alt="logo-rpl">
